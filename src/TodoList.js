@@ -7,7 +7,18 @@ import Soy from 'metal-soy';
 import './todo-list.scss';
 
 class TodoList extends Component {
+    newElement(event) {
+        this.setState({task: this.task.concat(event.target.value)});
+    }
+
 }
+
+TodoList.STATE = {
+    task: {
+        value: []
+    }
+}
+
 Soy.register(TodoList, templates);
 
 export { TodoList };

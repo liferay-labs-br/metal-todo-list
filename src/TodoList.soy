@@ -4,5 +4,9 @@
  * This renders the component's whole content.
  */
 {template .render}
-	<div class="todo-list">Hello World</div>
+	{@param newElement: any}
+
+	<div class="todo-list">
+		<input onChange="{$newElement}" type="text">
+	</div>
 {/template}
