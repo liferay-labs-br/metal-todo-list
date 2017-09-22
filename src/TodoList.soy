@@ -5,8 +5,16 @@
  */
 {template .render}
 	{@param newElement: any}
+	{@param inputValue: string}
 
-	<div class="todo-list">
-		<input onChange="{$newElement}" type="text">
+	<div class="container todo-list">
+		<div class="row">
+			<div class="col-sm-12">
+				<h1>Todo List</h1>
+
+				<label>Text</label>
+				<input class="form-control" onChange="{$newElement}" type="text" value="{$inputValue}">
+			</div>
+		</div>
 	</div>
 {/template}
