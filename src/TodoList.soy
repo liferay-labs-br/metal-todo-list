@@ -44,7 +44,18 @@
 
 	<div class="list-group">
 		{foreach $task in $tasks}
-			<div class="list-group-item">{$task}</div>
+			<a class="list-group-item list-group-item-action {$task.completed? 'completed' : ''}"
+				data-index="{index($task)}"
+				data-onclick="handleClick_"
+				href="#">
+
+				<div class="d-flex justify-content-between w-100">
+					<span class="description">
+						{$task.description}
+					</span>
+					<span aria-hidden="true">&times;</span>
+				</div>
+			</a>
 		{/foreach}
 	</div>
 {/template}
