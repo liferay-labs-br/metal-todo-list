@@ -9,7 +9,12 @@ import './todo-list.scss';
 class TodoList extends Component {
 
 	newTask(event) {
-		this.setState({tasks: this.tasks.concat(event.target.value)});
+		let newTask = {
+			description: event.target.value,
+			completed: false
+		}
+
+		this.setState({tasks: this.tasks.concat(newTask)});
 
 		event.target.value = "";
 	}
