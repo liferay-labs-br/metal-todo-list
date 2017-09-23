@@ -18,6 +18,7 @@ class TodoList extends Component {
 
 		event.target.value = "";
 	}
+
 	handleClick_(event) {
 		let task = event.delegateTarget;
 		let index = task.getAttribute('data-index');
@@ -37,11 +38,25 @@ class TodoList extends Component {
 		});
 
 		this.setState({ tasks: _tasks });
+	}
 }
 
 TodoList.STATE = {
 	tasks: {
-		value: []
+		value: [
+			{
+				description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer auctor sollicitudin enim vitae imperdiet. Morbi et faucibus purus, at gravida justo. Proin in nisi molestie, consectetur mi a, eleifend augue. Sed mollis libero at fermentum hendrerit.',
+				completed: false
+			},
+			{
+				description: 'Cras pharetra sodales lorem, ac euismod felis consectetur ac. Pellentesque tempus sapien mauris, ut pharetra lacus porta in.',
+				completed: true
+			},
+			{
+				description: 'Ut diam enim, mollis id facilisis vel, pulvinar interdum elit.',
+				completed: false
+			}
+		]
 	}
 }
 
