@@ -18,6 +18,25 @@ class TodoList extends Component {
 
 		event.target.value = "";
 	}
+	handleClick_(event) {
+		let task = event.delegateTarget;
+		let index = task.getAttribute('data-index');
+
+		let completed = this.tasks[index].completed;
+
+		let _tasks = this.tasks.map((task, i) => {
+			if(i == index) {
+				if(task.completed) {
+					task.completed = false;
+				} else {
+					task.completed = true;
+				}
+			}
+
+			return task;
+		});
+
+		this.setState({ tasks: _tasks });
 }
 
 TodoList.STATE = {
