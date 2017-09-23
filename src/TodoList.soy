@@ -4,17 +4,47 @@
  * This renders the component's whole content.
  */
 {template .render}
-	{@param newElement: any}
-	{@param inputValue: string}
+	{@param newTask: any}
+	{@param tasks: ?}
 
 	<div class="container todo-list">
+		<br/>
+
+		<h3>Metal TODO List</h3>
+
 		<div class="row">
 			<div class="col-sm-12">
-				<h1>Todo List</h1>
-
-				<label>Text</label>
-				<input class="form-control" onChange="{$newElement}" type="text" value="{$inputValue}">
+				{call .createTask}
+					{param newTask: $newTask /}
+				{/call}
 			</div>
 		</div>
+
+		<div class="row">
+			<div class="col-sm-12">
+				{call .listTasks}
+					{param tasks: $tasks /}
+				{/call}
+			</div>
+		</div>
+	</div>
+{/template}
+
+{template .createTask}
+	{@param newTask: any}
+
+	<div class="form-group">
+		<label>add a new task</label>
+		<input class="form-control" onChange="{$newTask}" type="text">
+	</div>
+{/template}
+
+{template .listTasks}
+	{@param tasks: ?}
+
+	<div class="list-group">
+		{foreach $task in $tasks}
+			<div class="list-group-item">{$task}</div>
+		{/foreach}
 	</div>
 {/template}
