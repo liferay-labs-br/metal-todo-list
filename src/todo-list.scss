@@ -1,2 +1,10 @@
 .todo-list {
+
+	.done {
+		opacity: .4;
+
+		.description {
+			text-decoration: line-through;
+		}
+	}
 }

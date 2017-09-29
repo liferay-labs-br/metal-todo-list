@@ -18,3 +18,33 @@
 		</div>
 	</div>
 {/template}
+
+{template .createTask}
+	{@param newTask: any}
+
+	<div class="form-group">
+		<label>add a new task</label>
+		<input class="form-control" onChange="{$newTask}" type="text">
+	</div>
+{/template}
+
+{template .listTasks}
+	{@param tasks: ?}
+
+	<div class="list-group">
+		{foreach $task in $tasks}
+			<a class="list-group-item list-group-item-action {$task.done? 'done' : ''}"
+				data-index="{index($task)}"
+				data-onclick="handleCheckTask_"
+				href="#">
+
+				<div class="d-flex justify-content-between w-100">
+					<span class="description">
+						{$task.description}
+					</span>
+					<span data-onclick="handleRemoveTask_" aria-hidden="true">&times;</span>
+				</div>
+			</a>
+		{/foreach}
+	</div>
+{/template}
