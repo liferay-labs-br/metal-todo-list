@@ -4,27 +4,33 @@
  * This renders the component's whole content.
  */
 {template .render}
-	{@param newElement: any}
-	{@param inputValue: string}
+	{@param tasks: ?}
 
 	<div class="container todo-list">
+		<br/>
+
+		<h3>Metal TODO List</h3>
+
 		<div class="row">
 			<div class="col-sm-12">
-				<h1>Todo List</h1>
+				{call .createTask /}
+			</div>
+		</div>
 
-				<label>Text</label>
-				<input class="form-control" onChange="{$newElement}" type="text" value="{$inputValue}">
+		<div class="row">
+			<div class="col-sm-12">
+				{call .listTasks}
+					{param tasks: $tasks /}
+				{/call}
 			</div>
 		</div>
 	</div>
 {/template}
 
 {template .createTask}
-	{@param newTask: any}
-
 	<div class="form-group">
 		<label>add a new task</label>
-		<input class="form-control" onChange="{$newTask}" type="text">
+		<input class="form-control" data-onchange="handleAddTask_" type="text">
 	</div>
 {/template}
 
@@ -42,7 +48,8 @@
 					<span class="description">
 						{$task.description}
 					</span>
-					<span data-onclick="handleRemoveTask_" aria-hidden="true">&times;</span>
+					<span aria-hidden="true"
+						data-onclick="handleRemoveTask_">&times;</span>
 				</div>
 			</a>
 		{/foreach}

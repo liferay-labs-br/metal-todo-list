@@ -7,7 +7,7 @@ import Soy from 'metal-soy';
 import './todo-list.scss';
 
 class TodoList extends Component {
-	newTask(event) {
+	handleAddTask_(event) {
 		let newTask = {
 			description: event.target.value,
 			done: false
