@@ -15,13 +15,13 @@ class TodoList extends Component {
 			done: false
 		}
 
-			this.setState(
-				{
-					list: this.list.concat(tempList)
-				});
-				this.refs.myInput.value = "";
+		this.setState(
+			{
+				list: this.list.concat(tempList)
+			});
+		this.refs.myInput.value = "";
 
-		}
+	}
 
 	markDone(e) {
 		console.log(this.list[e.target.getAttribute("data-index")]);
@@ -29,30 +29,40 @@ class TodoList extends Component {
 			name: this.list[e.target.getAttribute("data-index")].name,
 			done: !this.list[e.target.getAttribute("data-index")].done
 		}
-		this.list.splice(e.target.getAttribute("data-index"),1,temp);
-		this.setState({list: this.list});
-		console.log(this.list);
+		this.list.splice(e.target.getAttribute("data-index"), 1, temp);
+		this.setState({ list: this.list });
+
 
 	}
 
 	remove(e) {
-		if(e.target.tagName == "SPAN") {
+		if (e.target.tagName == "SPAN") {
 			console.log(e.target.getAttribute("data-index"));
-			this.list.splice(e.target.getAttribute("data-index"),1);
+			let removedTask = {
+				name: this.list[e.target.getAttribute("data-index")].name,
+				done: !this.list[e.target.getAttribute("data-index")].done
+			}
+			this.list.splice(e.target.getAttribute("data-index"), 1);
 			this.setState(
 				{
-					list: this.list
+					list: this.list,
+					removedTasks: this.removedTasks.concat(removedTask)
 				});
-				console.log(this.list);
 		}
 	}
 
 }
 
 TodoList.STATE = {
-    list: {
-        value: []
-		}
+	list: {
+		value: []
+	},
+
+	removedTasks: {
+		value: []
+	}
+
+
 
 }
 
