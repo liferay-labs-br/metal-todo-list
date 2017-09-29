@@ -4,9 +4,36 @@
  * This renders the component's whole content.
  */
 {template .render}
-	{@param newElement: any}
-
-	<div class="todo-list">
-		<input onChange="{$newElement}" type="text">
+	{@param createNewElement: any}
+	{@param list: ?}
+	<div class="todo-list container">
+		<h1>Todo List</h1>
+		{call .input}
+			{param createNewElement: $createNewElement /}
+		{/call}
+		{call .listOfTasks}
+			{param list: $list /}
+		{/call}
 	</div>
+{/template}
+
+{template .input}
+	{@param createNewElement: any}
+		<div class="form-group">
+			<input class="form-control" ref="myInput" data-onchange="{$createNewElement}" type="text">
+		</div>
+{/template}
+
+{template .listOfTasks}
+	{@param list: ?}
+	<div class="form-group">
+			<ul class="list-group" onClick="remove">
+				{foreach $element in $list}
+					<li class="list-group-item justify-content-between" data-index="{index($element)}" data-onclick="markDone" style="{if $element.done==true} text-decoration: line-through; {/if}">
+						{$element.name}
+						<span data-index="{index($element)}" class="badge badge-default badge-pill">x</span>
+					</li>
+				{/foreach}
+			</ul>
+		</div>
 {/template}

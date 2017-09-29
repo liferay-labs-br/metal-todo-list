@@ -7,16 +7,53 @@ import Soy from 'metal-soy';
 import './todo-list.scss';
 
 class TodoList extends Component {
-    newElement(event) {
-        this.setState({task: this.task.concat(event.target.value)});
-    }
+
+	createNewElement(e) {
+
+		let tempList = {
+			name: e.target.value,
+			done: false
+		}
+
+			this.setState(
+				{
+					list: this.list.concat(tempList)
+				});
+				this.refs.myInput.value = "";
+
+		}
+
+	markDone(e) {
+		console.log(this.list[e.target.getAttribute("data-index")]);
+		let temp = {
+			name: this.list[e.target.getAttribute("data-index")].name,
+			done: !this.list[e.target.getAttribute("data-index")].done
+		}
+		this.list.splice(e.target.getAttribute("data-index"),1,temp);
+		this.setState({list: this.list});
+		console.log(this.list);
+
+	}
+
+	remove(e) {
+		if(e.target.tagName == "SPAN") {
+			console.log(e.target.getAttribute("data-index"));
+			this.list.splice(e.target.getAttribute("data-index"),1);
+			this.setState(
+				{
+					list: this.list
+				});
+				console.log(this.list);
+		}
+	}
 
 }
 
 TodoList.STATE = {
-    task: {
+    list: {
         value: []
-    }
+		}
+
 }
 
 Soy.register(TodoList, templates);
