@@ -33,7 +33,7 @@
 		]
 	},
 	"dependencies": {
-		"bootstrap": "^3.3.6",
+		"bootstrap": "^4.0.0-beta",
 		"metal-soy": "^2.0.0"
 	},
 	"devDependencies": {
