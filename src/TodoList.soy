@@ -4,8 +4,8 @@
  * This renders the component's whole content.
  */
 {template .render}
-	{@param newTask: any}
-	{@param tasks: ?}
+	{@param tasks: list<[description: string, done: bool]>}
+	{@param editTask: bool}
 
 	<div class="container todo-list">
 		<br/>
@@ -14,9 +14,7 @@
 
 		<div class="row">
 			<div class="col-sm-12">
-				{call .createTask}
-					{param newTask: $newTask /}
-				{/call}
+				{call .createTask /}
 			</div>
 		</div>
 
@@ -27,35 +25,63 @@
 				{/call}
 			</div>
 		</div>
+
+		<div class="row {$editTask ? '' : 'd-none'}">
+			<div class="col-sm-12">
+				{call .editTasks}
+					{param editTask: $editTask /}
+				{/call}
+			</div>
+		</div>
+
 	</div>
 {/template}
 
+/**
+ * Create tasks
+ */
 {template .createTask}
-	{@param newTask: any}
-
 	<div class="form-group">
 		<label>add a new task</label>
-		<input class="form-control" onChange="{$newTask}" type="text">
+		<input class="form-control" data-onchange="handleAddTask_" type="text">
 	</div>
 {/template}
 
+/**
+ * Edit tasks
+ */
+{template .editTasks}
+	<div class="input-group">
+		<input class="form-control" data-onchange="handleAddTask_" type="text">
+		<span class="input-group-btn">
+			<button class="btn btn-primary">save it</button>
+		</span>
+	</div>
+{/template}
+
+/**
+ * List tasks
+ */
 {template .listTasks}
 	{@param tasks: ?}
 
 	<div class="list-group">
 		{foreach $task in $tasks}
-			<a class="list-group-item list-group-item-action {$task.completed? 'completed' : ''}"
+			<a class="list-group-item list-group-item-action {$task.done? 'done' : ''}"
 				data-index="{index($task)}"
-				data-onclick="handleClick_"
 				href="#">
-
 				<div class="d-flex justify-content-between w-100">
-					<span class="description">
-						{$task.description}
-					</span>
-					<span aria-hidden="true">&times;</span>
+					<span class="description"
+						data-onclick="handleCheckTask_">{$task.description}</span>
+					<button class="btn btn-secondary"
+						data-onclick="handleEditTask_">edit</button>
+					<button class="btn btn-secondary"
+						data-onclick="handleRemoveTask_">remove</button>
 				</div>
 			</a>
 		{/foreach}
+		{if $tasks.length == 0}
+			<div>nothing here</div>
+		{/if}
 	</div>
 {/template}
