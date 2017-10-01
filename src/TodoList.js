@@ -35,15 +35,36 @@ class TodoList extends Component {
 	//edit task
 	handleEditTask_(event) {
 		let index = this.getParentIndex(event);
+		let description = this.tasks[index].description;
+
+		let tempEditTask = {
+			description: description,
+			index: index,
+			show: true
+		}
+
+		this.setState({ editTask: tempEditTask });
+	}
+
+	//update description
+	handleUpdateDescription_(event) {
+		event.preventDefault();
+
+		let index = event.delegateTarget.index.value;
 		let tempTask = {
-			description: this.tasks[index].description + " adriano",
+			description: event.delegateTarget.description.value,
 			done: this.tasks[index].done
 		}
 
-		this.editTask = true;
-		this.setState({ editTask: this.editTask });
-
 		this.setUpdatedTask(index, tempTask);
+
+		let tempEditTask = {
+			description: '',
+			index: 0,
+			show: false
+		}
+
+		this.setState({ editTask: tempEditTask });
 	}
 
 	//remove task
@@ -98,7 +119,11 @@ TodoList.STATE = {
 		]
 	},
 	editTask: {
-		value: false
+		value: {
+			description: '',
+			index: 0,
+			show: false
+		}
 	}
 }
 

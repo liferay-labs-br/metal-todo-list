@@ -5,7 +5,7 @@
  */
 {template .render}
 	{@param tasks: list<[description: string, done: bool]>}
-	{@param editTask: bool}
+	{@param editTask: [description: string, index: int, show: bool]}
 
 	<div class="container todo-list">
 		<br/>
@@ -26,9 +26,9 @@
 			</div>
 		</div>
 
-		<div class="row {$editTask ? '' : 'd-none'}">
+		<div class="row {$editTask.show ? '' : 'd-none'}">
 			<div class="col-sm-12">
-				{call .editTasks}
+				{call .editTask}
 					{param editTask: $editTask /}
 				{/call}
 			</div>
@@ -48,15 +48,18 @@
 {/template}
 
 /**
- * Edit tasks
+ * Edit task
  */
-{template .editTasks}
-	<div class="input-group">
-		<input class="form-control" data-onchange="handleAddTask_" type="text">
+{template .editTask}
+	{@param editTask: [description: string, index: int, show: bool]}
+
+	<form class="input-group" data-onsubmit="handleUpdateDescription_">
+		<input type="hidden" name="index" value="{$editTask.index}">
+		<input class="form-control" name="description" type="text" value="{$editTask.description}">
 		<span class="input-group-btn">
-			<button class="btn btn-primary">save it</button>
+			<button type="submit" class="btn btn-primary">save it</button>
 		</span>
-	</div>
+	</form>
 {/template}
 
 /**
@@ -67,7 +70,7 @@
 
 	<div class="list-group">
 		{foreach $task in $tasks}
-			<a class="list-group-item list-group-item-action {$task.done? 'done' : ''}"
+			<a class="list-group-item list-group-item-action {$task.done ? 'done' : ''}"
 				data-index="{index($task)}"
 				href="#">
 				<div class="d-flex justify-content-between w-100">
