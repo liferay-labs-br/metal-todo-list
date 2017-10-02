@@ -54,29 +54,40 @@
 	</div>
 {/template}
 
-/**
- * List tasks
+ /**
+ * template list task
  */
-{template .listTasks}
-	{@param tasks: ?}
+{template .task}
+	{@param task: [description: string, done: bool, showEdit: bool]}
+	{@param index: int}
 
-	<div class="list-group">
-		{foreach $task in $tasks}
-			<a class="list-group-item list-group-item-action {$task.done ? 'done' : ''}"
-				data-index="{index($task)}"
-				href="#">
-				<div class="d-flex justify-content-between w-100">
-					<span class="description"
-						data-onclick="handleCheckTask_">{$task.description}</span>
-					<button class="btn btn-secondary"
-						data-onclick="handleEditTask_">edit</button>
-					<button class="btn btn-secondary"
-						data-onclick="handleRemoveTask_">remove</button>
-				</div>
-			</a>
-		{/foreach}
-		{if $tasks.length == 0}
-			<div>nothing here</div>
-		{/if}
-	</div>
+	<li class="todo-list__list-group__item {$task.done ? 'todo-list__list-group__item--done' : ''} {$task.showEdit ? 'todo-list__list-group__item--editing' : ''}">
+
+		//checkbox
+		<input {if $task.done}checked{/if}
+			class="todo-list__checkbox"
+			data-index="{$index}"
+			data-onchange="handleDoneTask_"
+			type="checkbox">
+
+		//description
+		<div class="todo-list__content-item">
+			<button class="todo-list__description {$task.showEdit ? 'hide' : ''}"
+				data-index="{$index}"
+				data-onclick="handleEditTask_">{$task.description}</button>
+			<input class="todo-list__description--edit-mode {$task.showEdit ? '' : 'hide'}"
+				data-index="{$index}"
+				data-onchange="handleSaveEditTask_"
+				type="text"
+				value="{$task.description}">
+		</div>
+
+		//remove
+		<button class="todo-list__btn--remove-task"
+			data-index="{$index}"
+			data-onclick="handleRemoveTask_"
+			type="button">
+				<i class="fa fa-window-close"></i>
+			</button>
+	</li>
 {/template}
