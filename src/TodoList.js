@@ -43,16 +43,13 @@ class TodoList extends Component {
 		});
 	}
 
-	//remove task
-	handleRemoveTask_(event) {
-		let index = this.getParentIndex(event);
+	handleDoneTask_(event) {
+		let task = this.getTask(event.delegateTarget);
+		task.done = !task.done;
 
-		this.setRemovedTask(index);
-	}
-
-	//get the parent index
-	getParentIndex(event) {
-		return parseInt(event.target.parentNode.parentNode.getAttribute("data-index"));
+		this.setState({
+			tasks: this.tasks
+		});
 	}
 
 	//update task in array
