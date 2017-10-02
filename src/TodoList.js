@@ -103,5 +103,7 @@ TodoList.STATE = {
 
 Soy.register(TodoList, templates);
 
-export { TodoList };
+export {
+	TodoList
+};
 export default TodoList;
