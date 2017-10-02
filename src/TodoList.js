@@ -24,18 +24,13 @@ class TodoList extends Component {
 		event.delegateTarget.value = "";
 	}
 
-	//edit task
 	handleEditTask_(event) {
-		let index = this.getParentIndex(event);
-		let description = this.tasks[index].description;
+		let task = this.getTask(event.delegateTarget);
+		task.showEdit = true;
 
-		let tempEditTask = {
-			description: description,
-			index: index,
-			show: true
-		}
-
-		this.setState({ editTask: tempEditTask });
+		this.setState({
+			tasks: this.tasks
+		});
 	}
 
 	//update description
