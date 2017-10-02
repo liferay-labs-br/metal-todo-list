@@ -52,11 +52,13 @@ class TodoList extends Component {
 		});
 	}
 
+	handleRemoveTask_(event) {
+		let index = this.getIndex(event.delegateTarget);
 
-	//remove task in array
-	setRemovedTask(index) {
 		this.tasks.splice(index, 1);
-		this.updateTasks();
+		this.setState({
+			tasks: this.tasks
+		});
 	}
 
 	//update tasks
