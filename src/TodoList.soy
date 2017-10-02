@@ -4,35 +4,17 @@
  * This renders the component's whole content.
  */
 {template .render}
-	{@param tasks: list<[description: string, done: bool]>}
-	{@param editTask: [description: string, index: int, show: bool]}
+	{@param tasks: list<[description: string, done: bool, showEdit: bool]>}
 
-	<div class="container todo-list">
-		<br/>
+	<div class="todo-list">
 
-		<h3>Metal TODO List</h3>
+		//list task
+		{call .listTask}
+			{param tasks: $tasks /}
+		{/call}
 
-		<div class="row">
-			<div class="col-sm-12">
-				{call .createTask /}
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-sm-12">
-				{call .listTasks}
-					{param tasks: $tasks /}
-				{/call}
-			</div>
-		</div>
-
-		<div class="row {$editTask.show ? '' : 'd-none'}">
-			<div class="col-sm-12">
-				{call .editTask}
-					{param editTask: $editTask /}
-				{/call}
-			</div>
-		</div>
+		//template add task
+		{call .addTask /}
 
 	</div>
 {/template}
