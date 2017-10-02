@@ -75,18 +75,20 @@ class TodoList extends Component {
 
 TodoList.STATE = {
 	tasks: {
-		value: [
-			{
-				description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer auctor sollicitudin enim vitae imperdiet. Morbi et faucibus purus, at gravida justo. Proin in nisi molestie, consectetur mi a, eleifend augue. Sed mollis libero at fermentum hendrerit.',
-				done: false
+		value: [{
+				description: 'task 01',
+				done: false,
+				showEdit: false,
 			},
 			{
-				description: 'Cras pharetra sodales lorem, ac euismod felis consectetur ac. Pellentesque tempus sapien mauris, ut pharetra lacus porta in.',
-				done: true
+				description: 'task 02',
+				done: true,
+				showEdit: false,
 			},
 			{
-				description: 'Ut diam enim, mollis id facilisis vel, pulvinar interdum elit.',
-				done: false
+				description: 'task 03',
+				done: false,
+				showEdit: false,
 			}
 		]
 	},
