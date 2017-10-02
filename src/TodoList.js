@@ -33,25 +33,14 @@ class TodoList extends Component {
 		});
 	}
 
-	//update description
-	handleUpdateDescription_(event) {
-		event.preventDefault();
+	handleSaveEditTask_(event) {
+		let task = this.getTask(event.delegateTarget);
+		task.description = event.delegateTarget.value;
+		task.showEdit = false;
 
-		let index = event.delegateTarget.index.value;
-		let tempTask = {
-			description: event.delegateTarget.description.value,
-			done: this.tasks[index].done
-		}
-
-		this.setUpdatedTask(index, tempTask);
-
-		let tempEditTask = {
-			description: '',
-			index: 0,
-			show: false
-		}
-
-		this.setState({ editTask: tempEditTask });
+		this.setState({
+			tasks: this.tasks
+		});
 	}
 
 	//remove task
