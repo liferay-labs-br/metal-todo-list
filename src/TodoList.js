@@ -61,12 +61,7 @@ class TodoList extends Component {
 		});
 	}
 
-	//update tasks
-	updateTasks() {
-		this.setState({ tasks: this.tasks });
 
-		//show console tasks
-		console.log(this.tasks);
 	}
 }
 
