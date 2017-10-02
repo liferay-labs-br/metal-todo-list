@@ -1,10 +1,127 @@
-.todo-list {
+$c: '.todo-list';
 
-	.done {
+$baseline: 12px;
+
+$color-body: #f0f0f0;
+$color-black: #e3e3e3;
+$color-yellow: #fffda6;
+$color-white: #fff;
+
+.hide {
+	display: none !important;
+}
+
+%flex-center-between {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+%item-w-100 {
+	width: 100%;
+}
+
+%description-pack {
+	@extend %item-w-100;
+	background-color: transparent;
+	margin-right: $baseline;
+	padding: $baseline;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	background-color: $color-body;
+}
+
+body, input, button {
+	font-family: helvetica, sans-serif;
+	font-size: 14px;
+	line-height: 1.4em;
+}
+
+#{$c} {
+	@extend %item-w-100;
+	background-color: $color-white;
+	border: 1px solid $color-black;
+	box-shadow: 5px 5px $color-black;
+	margin: 60px auto;
+	max-width: 700px;
+
+	#{$c}__add-task {
+		position: relative;
+
+		input {
+			border: none;
+			padding: $baseline $baseline $baseline #{20px + $baseline};
+			width: 100%;
+		}
+	}
+
+	#{$c}__btn--remove-task {
+    background-color: transparent;
+    border: none;
+		margin-left: $baseline;
+    padding: 0;
+	}
+
+	#{$c}__checkbox {
+		margin: #{5px + $baseline} 0 auto;
+	}
+
+	#{$c}__content-item {
+		@extend %item-w-100;
+	}
+
+	#{$c}__description {
+		@extend %description-pack;
+    background-color: transparent;
+		background-image: none;
+		border: none;
+    text-align: left;
+	}
+
+	#{$c}__description--edit-mode {
+		@extend %description-pack;
+		border: none;
+	}
+
+	#{$c}__icon-add-task {
+    bottom: 0;
+    height: 13px;
+    left: 12px;
+    margin: auto;
+		position: absolute;
+    top: 0;
+	}
+
+	#{$c}__list-group {
+		margin: 0;
+		padding: 0;
+	}
+
+	#{$c}__list-group__item {
+		@extend %flex-center-between;
+		border-bottom: 1px solid $color-black;
+		padding: 0 $baseline;
+		list-style: none;
+
+		&:hover:not(.todo-list__list-group__item--editing) {
+			background-color: $color-body;
+		}
+	}
+
+	#{$c}__list-group__item--done {
 		opacity: .4;
 
-		.description {
+		#{$c}__description {
 			text-decoration: line-through;
 		}
+	}
+
+	#{$c}__list-group__item--editing {
+		background-color: $color-yellow;
 	}
 }
