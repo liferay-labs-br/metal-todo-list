@@ -20,14 +20,15 @@
 {/template}
 
 /**
- * Create tasks
+ * template add task
  */
-{template .createTask}
-	<div class="form-group">
-		<label>add a new task</label>
-		<input class="form-control" data-onchange="handleAddTask_" type="text">
+ {template .addTask}
+	<div class="todo-list__add-task">
+		<i class="fa fa-plus todo-list__icon-add-task"></i>
+		<input data-onchange="handleAddTask_"
+			placeholder="add a new task">
 	</div>
-{/template}
+ {/template}
 
 /**
  * Edit task
