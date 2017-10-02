@@ -52,11 +52,6 @@ class TodoList extends Component {
 		});
 	}
 
-	//update task in array
-	setUpdatedTask(index, task) {
-		this.tasks.splice(index, 1, task);
-		this.updateTasks();
-	}
 
 	//remove task in array
 	setRemovedTask(index) {
