@@ -8,28 +8,20 @@ import './todo-list.scss';
 
 class TodoList extends Component {
 
-	//add task
 	handleAddTask_(event) {
-		let newTask = {
-			description: event.target.value,
-			done: false
-		}
-
-		this.setUpdatedTask(this.tasks.length, newTask);
-
-		//clear the field
-		event.target.value = "";
-	}
-
-	//check task
-	handleCheckTask_(event) {
-		let index = this.getParentIndex(event);
+		let index = this.tasks.length;
 		let tempTask = {
-			description: this.tasks[index].description,
-			done: !this.tasks[index].done
+			description: event.delegateTarget.value,
+			done: false,
+			showEdit: false
 		}
 
-		this.setUpdatedTask(index, tempTask);
+		this.tasks.splice(index, 1, tempTask);
+		this.setState({
+			tasks: this.tasks
+		});
+
+		event.delegateTarget.value = "";
 	}
 
 	//edit task
