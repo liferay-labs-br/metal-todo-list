@@ -30,19 +30,28 @@
 	</div>
  {/template}
 
-/**
- * Edit task
+ /**
+ * template list task
  */
-{template .editTask}
-	{@param editTask: [description: string, index: int, show: bool]}
+{template .listTask}
+	{@param tasks: list<[description: string, done: bool, showEdit: bool]>}
 
-	<form class="input-group" data-onsubmit="handleUpdateDescription_">
-		<input type="hidden" name="index" value="{$editTask.index}">
-		<input class="form-control" name="description" type="text" value="{$editTask.description}">
-		<span class="input-group-btn">
-			<button type="submit" class="btn btn-primary">save it</button>
-		</span>
-	</form>
+	<div class="todo-list__list-task">
+		<ul class="todo-list__list-group">
+			<li class="todo-list__list-group__item">
+				<h3>
+					<i class="fa fa-list-ul"></i> Metal TODO List
+				</h3>
+			</li>
+			{foreach $task in $tasks}
+				{let $index: index($task) /}
+				{call .task}
+					{param task: $task /}
+					{param index: $index /}
+				{/call}
+			{/foreach}
+		</ul>
+	</div>
 {/template}
 
 /**
