@@ -54,11 +54,19 @@ class TodoList extends Component {
 
 	handleRemoveTask_(event) {
 		let index = this.getIndex(event.delegateTarget);
+		let parent = 	event.delegateTarget.parentNode;
 
-		this.tasks.splice(index, 1);
-		this.setState({
-			tasks: this.tasks
-		});
+		//visual effect - removing task
+		parent.classList.add("removing");
+
+		setTimeout(() => {
+			parent.classList.remove("removing");
+
+			this.tasks.splice(index, 1);
+			this.setState({
+				tasks: this.tasks
+			});
+		}, 500);
 	}
 
 	//get current task
