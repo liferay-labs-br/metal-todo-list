@@ -105,11 +105,20 @@ body, input, button {
 	#{$c}__list-group__item {
 		@extend %flex-center-between;
 		border-bottom: 1px solid $color-black;
+		max-height: 300px;
+		overflow: auto;
 		padding: 0 $baseline;
 		list-style: none;
+		opacity: 0;
 
 		&:hover:not(.todo-list__list-group__item--editing) {
 			background-color: $color-body;
+		}
+
+		&.removing {
+			overflow: hidden;
+			max-height: 0;
+			transition: max-height .5s ease-in-out;
 		}
 	}
 
