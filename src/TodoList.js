@@ -63,15 +63,14 @@ class TodoList extends Component {
 
 	//get current task
 	getTask(event) {
-		return this.tasks[event.getAttribute("data-index")];
+		return this.tasks[this.getIndex(event)];
 	}
 
 	//get current index
 	getIndex(event) {
-		return event.getAttribute("data-index");
+		return parseInt(event.getAttribute("data-index"));
 	}
 }
-
 
 TodoList.STATE = {
 	tasks: {
