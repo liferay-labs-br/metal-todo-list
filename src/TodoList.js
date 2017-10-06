@@ -3,6 +3,7 @@
 import templates from './TodoList.soy.js';
 import Component from 'metal-component';
 import Soy from 'metal-soy';
+import WeDeploy from 'wedeploy';
 
 import './todo-list.scss';
 

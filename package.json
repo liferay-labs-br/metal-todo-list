@@ -37,7 +37,8 @@
 	"dependencies": {
 		"bootstrap": "^4.0.0-beta",
 		"font-awesome": "^4.7.0",
-		"metal-soy": "^2.0.0"
+		"metal-soy": "^2.0.0",
+		"wedeploy": "^3.5.0"
 	},
 	"devDependencies": {
 		"babel-cli": "^6.4.5",
