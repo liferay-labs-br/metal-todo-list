@@ -109,7 +109,6 @@ body, input, button {
 		overflow: auto;
 		padding: 0 $baseline;
 		list-style: none;
-		opacity: 0;
 
 		&:hover:not(.todo-list__list-group__item--editing) {
 			background-color: $color-body;
