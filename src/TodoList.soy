@@ -6,8 +6,18 @@
 {template .render}
 	{@param tasks: list<[description: string, done: bool, showEdit: bool]>}
 	{@param disable: bool}
+	{@param messageLog: ?}
 
 	<div class="todo-list">
+
+		//Toast
+		<div class="todo-list__toast">
+			{foreach $message in $messageLog}
+				{call Toast.render}
+					{param message: $message /}
+				{/call}
+			{/foreach}
+		</div>
 
 		//Progress Bar
 		<div class="{$disable ? '' : 'hide'}">

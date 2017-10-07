@@ -5,6 +5,7 @@ import Component from 'metal-component';
 import Soy from 'metal-soy';
 import WeDeploy from 'wedeploy';
 import './components/loading-bar/LoadingBar';
+import Toast from './components/toast/Toast';
 
 import './todo-list.scss';
 
@@ -33,6 +34,9 @@ class TodoList extends Component {
 		});
 	}
 
+	/**
+	 * Add task
+	 */
 	handleAddTask_(event) {
 		let eventTarget = event.delegateTarget;
 		let index = this.tasks.length;
@@ -57,8 +61,13 @@ class TodoList extends Component {
 				tasks: this.tasks
 			});
 
+			//message
+			this.setMessage('task saved successfully');
+
+			//clean input
 			eventTarget.value = "";
 
+			//set focus on input
 			this.setFocus(inputAdd);
 
 		}).catch(error => {
@@ -78,11 +87,14 @@ class TodoList extends Component {
 			tasks: this.tasks
 		});
 
+		//set focus on input
 		this.setFocus(inputEdit);
 	}
 
+	/**
+	 * Save edit task
+	 */
 	handleSaveEditTask_(event) {
-
 		let eventTarget = event.delegateTarget;
 		let task = this.getTask(eventTarget);
 
@@ -94,8 +106,8 @@ class TodoList extends Component {
 		});
 
 		WeDeploy.data(DB).update(`${PATH}/${task.id}`, {
-			'description': eventTarget.value,
-			'showEdit': false
+			description: eventTarget.value,
+			showEdit: false
 		}).then(response => {
 
 			this.setState({
@@ -106,11 +118,17 @@ class TodoList extends Component {
 				disable: false
 			});
 
+			//message
+			this.setMessage('task edited successfully');
+
 		}).catch(error => {
 			console.error(error);
 		});
 	}
 
+	/**
+	 * Mark task as done
+	 */
 	handleDoneTask_(event) {
 		let task = this.getTask(event.delegateTarget);
 
@@ -119,7 +137,7 @@ class TodoList extends Component {
 		});
 
 		WeDeploy.data(DB).update(`${PATH}/${task.id}`, {
-			"done": !task.done
+			done: !task.done
 		}).then(response => {
 
 			task.done = !task.done;
@@ -132,11 +150,17 @@ class TodoList extends Component {
 				disable: false
 			});
 
+			//message
+			this.setMessage('task marked successfully completed');
+
 		}).catch(error => {
 			console.error(error);
 		});
 	}
 
+	/**
+	 * Remove task
+	 */
 	handleRemoveTask_(event) {
 		let eventTarget = event.delegateTarget;
 		let index = this.getIndex(eventTarget);
@@ -159,6 +183,9 @@ class TodoList extends Component {
 					disable: false
 				});
 
+				//message
+			this.setMessage('task removed successfully');
+
 			})
 			.catch(function (error) {
 				console.error(error);
@@ -172,7 +199,7 @@ class TodoList extends Component {
 
 	//get current index
 	getIndex(event) {
-		return parseInt(event.getAttribute("data-index"));
+		return parseInt(event.getAttribute('data-index'));
 	}
 
 	//set focus on element
@@ -180,6 +207,23 @@ class TodoList extends Component {
 		setTimeout(() => {
 			element.focus();
 		}, 0);
+	}
+
+	//set message
+	setMessage(message) {
+
+		this.messageLog.push(message);
+		this.setState({
+			messageLog: this.messageLog
+		});
+
+		setTimeout(() => {
+			this.messageLog.shift();
+			this.setState({
+				messageLog: this.messageLog
+			});
+
+		}, 10000);
 	}
 
 }
@@ -190,6 +234,9 @@ TodoList.STATE = {
 	},
 	disable: {
 		value: false
+	},
+	messageLog: {
+		value: []
 	}
 }
 

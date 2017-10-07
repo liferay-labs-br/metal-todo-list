@@ -1,0 +1,18 @@
+$c: '.toast';
+$toast-bg: #323232;
+$toast-border-radius: 4px;
+$toast-color: #fff;
+$toast-max-w: 100%;
+$toast-margin: .5rem 0 0;
+$toast-padding: 1rem 2rem;
+$toast-w: 300px;
+
+#{$c} {
+	background-color: $toast-bg;
+	border-radius: $toast-border-radius;
+	color: $toast-color;
+	margin: $toast-margin;
+	max-width: $toast-max-w;
+	padding: $toast-padding;
+	width: $toast-w;
+}

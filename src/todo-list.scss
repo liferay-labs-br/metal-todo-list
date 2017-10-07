@@ -132,4 +132,10 @@ body, input, button {
 	#{$c}__list-group__item--editing {
 		background-color: $color-yellow;
 	}
+
+	#{$c}__toast {
+		position: fixed;
+		right: $baseline * 3;
+		bottom: $baseline * 3;
+	}
 }
