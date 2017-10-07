@@ -1,4 +1,4 @@
-$c: '.progress-bar';
+$c: '.loading-bar';
 $color1: #1FC4A6;
 $color2: #A561B7;
 $color3: #FDCF54;
@@ -16,7 +16,7 @@ $animation-delay3: 1.8s;
 		animation-duration: $animation-duration;
 		animation-iteration-count: infinite;
 		animation-timing-function: ease-out;
-		animation-name: progress-bar;
+		animation-name: loading-bar;
 		height: 2px;
 		left: 0;
 		position: absolute;
@@ -41,7 +41,7 @@ $animation-delay3: 1.8s;
 	}
 }
 
-@keyframes progress-bar {
+@keyframes loading-bar {
 	0% {
 		transform: scaleX(0);
 		z-index: 5;

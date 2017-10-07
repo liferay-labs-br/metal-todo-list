@@ -4,7 +4,7 @@ import templates from './TodoList.soy.js';
 import Component from 'metal-component';
 import Soy from 'metal-soy';
 import WeDeploy from 'wedeploy';
-import './components/ProgressBar';
+import './components/loading-bar/LoadingBar';
 
 import './todo-list.scss';
 
