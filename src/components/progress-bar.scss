@@ -1,0 +1,60 @@
+$c: '.progress-bar';
+$color1: #1FC4A6;
+$color2: #A561B7;
+$color3: #FDCF54;
+$color4: #EE4D51;
+
+$animation-duration: 2.4s;
+$animation-delay1: .6s;
+$animation-delay2: 1.2s;
+$animation-delay3: 1.8s;
+
+#{$c} {
+	position: relative;
+
+	#{$c}__color {
+		animation-duration: $animation-duration;
+		animation-iteration-count: infinite;
+		animation-timing-function: ease-out;
+		animation-name: progress-bar;
+		height: 2px;
+		left: 0;
+		position: absolute;
+		top: 0;
+		width: 100%;
+
+		&#{$c}__color--color1 {
+			background-color: $color1;
+		}
+		&#{$c}__color--color2 {
+			animation-delay: $animation-delay1;
+			background-color: $color2;
+		}
+		&#{$c}__color--color3 {
+			animation-delay: $animation-delay2;
+			background-color: $color3;
+		}
+		&#{$c}__color--color4 {
+			animation-delay: $animation-delay3;
+			background-color: $color4;
+		}
+	}
+}
+
+@keyframes progress-bar {
+	0% {
+		transform: scaleX(0);
+		z-index: 5;
+	}
+	25% {
+		z-index: 4;
+	}
+	50% {
+		transform: scaleX(1);
+		z-index: 3;
+	}
+	100% {
+		transform: scaleX(1);
+		z-index: 1;
+	}
+}
