@@ -14,22 +14,23 @@ const PATH = 'tasks';
 class TodoList extends Component {
 
 	created() {
-		this.setState({ disable: true });
+		this.setState({
+			disable: true
+		});
 
-		WeDeploy.data(DB).get(PATH)
-			.then(tasks => {
+		WeDeploy.data(DB).get(PATH).then(tasks => {
 
-				this.setState({ disable: false });
-
-				this.setState({
-					tasks: tasks
-				});
-
-				console.log('list', tasks);
-			})
-			.catch(error => {
-				console.error(error);
+			this.setState({
+				disable: false
 			});
+
+			this.setState({
+				tasks: tasks
+			});
+
+		}).catch(error => {
+			console.error(error);
+		});
 	}
 
 	handleAddTask_(event) {
@@ -58,12 +59,8 @@ class TodoList extends Component {
 
 			eventTarget.value = "";
 
-			setTimeout(() => {
-				inputAdd.focus();
-			}, 0);
 			this.setFocus(inputAdd);
 
-			console.log('save', response);
 		}).catch(error => {
 			console.log(error);
 		});
@@ -77,15 +74,10 @@ class TodoList extends Component {
 
 		task.showEdit = true;
 
-		console.log(task);
-
 		this.setState({
 			tasks: this.tasks
 		});
 
-		setTimeout(() => {
-			inputEdit.focus();
-		}, 0);
 		this.setFocus(inputEdit);
 	}
 
@@ -98,14 +90,22 @@ class TodoList extends Component {
 		task.showEdit = false;
 
 		this.setState({
-			tasks: this.tasks
+			disable: true
 		});
 
 		WeDeploy.data(DB).update(`${PATH}/${task.id}`, {
 			'description': eventTarget.value,
 			'showEdit': false
 		}).then(response => {
-			console.log('save edit task', response);
+
+			this.setState({
+				tasks: this.tasks
+			});
+
+			this.setState({
+				disable: false
+			});
+
 		}).catch(error => {
 			console.error(error);
 		});
@@ -113,17 +113,25 @@ class TodoList extends Component {
 
 	handleDoneTask_(event) {
 		let task = this.getTask(event.delegateTarget);
-		task.done = !task.done;
+
+		this.setState({
+			disable: true
+		});
 
 		WeDeploy.data(DB).update(`${PATH}/${task.id}`, {
-			"done": task.done
+			"done": !task.done
 		}).then(response => {
+
+			task.done = !task.done;
 
 			this.setState({
 				tasks: this.tasks
 			});
 
-			console.log('done', response);
+			this.setState({
+				disable: false
+			});
+
 		}).catch(error => {
 			console.error(error);
 		});
@@ -142,20 +150,15 @@ class TodoList extends Component {
 		WeDeploy.data(DB).delete(`${PATH}/${task.id}`)
 			.then(response => {
 
-				//visual effect - removing task
-				parent.classList.add("removing");
-
-				setTimeout(() => {
-					this.tasks.splice(index, 1);
-					this.setState({
-						tasks: this.tasks
-					});
-				}, 500);
+				this.tasks.splice(index, 1);
+				this.setState({
+					tasks: this.tasks
+				});
 
 				this.setState({
 					disable: false
 				});
-				console.log('delete', response);
+
 			})
 			.catch(function (error) {
 				console.error(error);
@@ -178,6 +181,7 @@ class TodoList extends Component {
 			element.focus();
 		}, 0);
 	}
+
 }
 
 TodoList.STATE = {
