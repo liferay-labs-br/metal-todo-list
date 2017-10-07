@@ -7,40 +7,104 @@ import WeDeploy from 'wedeploy';
 
 import './todo-list.scss';
 
+const DB = 'https://db-todolist.wedeploy.io';
+const PATH = 'tasks';
+
 class TodoList extends Component {
 
-	handleAddTask_(event) {
-		let index = this.tasks.length;
-		let tempTask = {
-			description: event.delegateTarget.value,
-			done: false,
-			showEdit: false
-		}
+	created() {
+		this.setState({ disable: true });
 
-		this.tasks.splice(index, 1, tempTask);
+		WeDeploy.data(DB).get(PATH)
+			.then(tasks => {
+
+				this.setState({ disable: false });
+
+				this.setState({
+					tasks: tasks
+				});
+
+				console.log('list', tasks);
+			})
+			.catch(error => {
+				console.error(error);
+			});
+	}
+
+	handleAddTask_(event) {
+		let eventTarget = event.delegateTarget;
+		let index = this.tasks.length;
+		let inputAdd = document.querySelector("#inputAdd");
+
 		this.setState({
-			tasks: this.tasks
+			disable: true
 		});
 
-		event.delegateTarget.value = "";
+		WeDeploy.data(DB).create(PATH, {
+			description: eventTarget.value,
+			done: false,
+			showEdit: false
+		}).then(response => {
+
+			this.setState({
+				disable: false
+			});
+
+			this.tasks.splice(index, 1, response);
+			this.setState({
+				tasks: this.tasks
+			});
+
+			eventTarget.value = "";
+
+			setTimeout(() => {
+				inputAdd.focus();
+			}, 0);
+
+			console.log('save', response);
+		}).catch(error => {
+			console.log(error);
+		});
 	}
 
 	handleEditTask_(event) {
-		let task = this.getTask(event.delegateTarget);
+		let eventTarget = event.delegateTarget;
+		let task = this.getTask(eventTarget);
+		let parent = eventTarget.parentNode;
+		let inputEdit = parent.querySelector('#inputEdit');
+
 		task.showEdit = true;
+
+		console.log(task);
 
 		this.setState({
 			tasks: this.tasks
 		});
+
+		setTimeout(() => {
+			inputEdit.focus();
+		}, 0);
 	}
 
 	handleSaveEditTask_(event) {
-		let task = this.getTask(event.delegateTarget);
-		task.description = event.delegateTarget.value;
+
+		let eventTarget = event.delegateTarget;
+		let task = this.getTask(eventTarget);
+
+		task.description = eventTarget.value;
 		task.showEdit = false;
 
 		this.setState({
 			tasks: this.tasks
+		});
+
+		WeDeploy.data(DB).update(`${PATH}/${task.id}`, {
+			'description': eventTarget.value,
+			'showEdit': false
+		}).then(response => {
+			console.log('save edit task', response);
+		}).catch(error => {
+			console.error(error);
 		});
 	}
 
@@ -48,26 +112,51 @@ class TodoList extends Component {
 		let task = this.getTask(event.delegateTarget);
 		task.done = !task.done;
 
-		this.setState({
-			tasks: this.tasks
+		WeDeploy.data(DB).update(`${PATH}/${task.id}`, {
+			"done": task.done
+		}).then(response => {
+
+			this.setState({
+				tasks: this.tasks
+			});
+
+			console.log('done', response);
+		}).catch(error => {
+			console.error(error);
 		});
 	}
 
 	handleRemoveTask_(event) {
-		let index = this.getIndex(event.delegateTarget);
-		let parent = 	event.delegateTarget.parentNode;
+		let eventTarget = event.delegateTarget;
+		let index = this.getIndex(eventTarget);
+		let parent = eventTarget.parentNode;
+		let task = this.getTask(eventTarget);
 
-		//visual effect - removing task
-		parent.classList.add("removing");
+		this.setState({
+			disable: true
+		});
 
-		setTimeout(() => {
-			parent.classList.remove("removing");
+		WeDeploy.data(DB).delete(`${PATH}/${task.id}`)
+			.then(response => {
 
-			this.tasks.splice(index, 1);
-			this.setState({
-				tasks: this.tasks
+				//visual effect - removing task
+				parent.classList.add("removing");
+
+				setTimeout(() => {
+					this.tasks.splice(index, 1);
+					this.setState({
+						tasks: this.tasks
+					});
+				}, 500);
+
+				this.setState({
+					disable: false
+				});
+				console.log('delete', response);
+			})
+			.catch(function (error) {
+				console.error(error);
 			});
-		}, 500);
 	}
 
 	//get current task
@@ -79,33 +168,13 @@ class TodoList extends Component {
 	getIndex(event) {
 		return parseInt(event.getAttribute("data-index"));
 	}
+
 }
 
 TodoList.STATE = {
 	tasks: {
-		value: [{
-				description: 'task 01',
-				done: false,
-				showEdit: false,
-			},
-			{
-				description: 'task 02',
-				done: true,
-				showEdit: false,
-			},
-			{
-				description: 'task 03',
-				done: false,
-				showEdit: false,
-			}
-		]
+		value: []
 	},
-	editTask: {
-		value: {
-			description: '',
-			index: 0,
-			show: false
-		}
 	disable: {
 		value: false
 	}
