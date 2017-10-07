@@ -61,6 +61,7 @@ class TodoList extends Component {
 			setTimeout(() => {
 				inputAdd.focus();
 			}, 0);
+			this.setFocus(inputAdd);
 
 			console.log('save', response);
 		}).catch(error => {
@@ -85,6 +86,7 @@ class TodoList extends Component {
 		setTimeout(() => {
 			inputEdit.focus();
 		}, 0);
+		this.setFocus(inputEdit);
 	}
 
 	handleSaveEditTask_(event) {
@@ -170,6 +172,12 @@ class TodoList extends Component {
 		return parseInt(event.getAttribute("data-index"));
 	}
 
+	//set focus on element
+	setFocus(element) {
+		setTimeout(() => {
+			element.focus();
+		}, 0);
+	}
 }
 
 TodoList.STATE = {
