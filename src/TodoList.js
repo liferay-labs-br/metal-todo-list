@@ -106,6 +106,8 @@ TodoList.STATE = {
 			index: 0,
 			show: false
 		}
+	disable: {
+		value: false
 	}
 }
 
