@@ -49,8 +49,6 @@ class TodoList extends Component {
 			showEdit: false
 		}).then(response => {
 
-			console.log(response);
-
 			this.tasks.splice(index, 1, response);
 
 			this.setState({
