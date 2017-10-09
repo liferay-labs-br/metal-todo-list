@@ -3761,9 +3761,7 @@ var _wedeploy2 = _interopRequireDefault(_wedeploy);
 
 __webpack_require__(64);
 
-var _Toast = __webpack_require__(69);
-
-var _Toast2 = _interopRequireDefault(_Toast);
+__webpack_require__(69);
 
 __webpack_require__(73);
 
@@ -3843,7 +3841,7 @@ var TodoList = function (_Component) {
 				});
 
 				//message
-				_this3.setMessage('task saved successfully');
+				_this3.toast(_this3.language.save);
 
 				//clean input
 				eventTarget.value = "";
@@ -3859,7 +3857,7 @@ var TodoList = function (_Component) {
 		value: function handleEditTask_(event) {
 			var eventTarget = event.delegateTarget;
 			var task = this.getTask(eventTarget);
-			var parent = eventTarget.parentNode;
+			var parent = eventTarget.parentNode.parentNode;
 			var inputEdit = parent.querySelector('#inputEdit');
 
 			task.showEdit = true;
@@ -3905,7 +3903,7 @@ var TodoList = function (_Component) {
 				});
 
 				//message
-				_this4.setMessage('task edited successfully');
+				_this4.toast(_this4.language.update, 'pencil');
 			}).catch(function (error) {
 				console.error(error);
 			});
@@ -3941,7 +3939,7 @@ var TodoList = function (_Component) {
 				});
 
 				//message
-				_this5.setMessage('task marked successfully completed');
+				_this5.toast(_this5.language.done);
 			}).catch(function (error) {
 				console.error(error);
 			});
@@ -3977,7 +3975,7 @@ var TodoList = function (_Component) {
 				});
 
 				//message
-				_this6.setMessage('task removed successfully');
+				_this6.toast(_this6.language.remove, 'trash');
 			}).catch(function (error) {
 				console.error(error);
 			});
@@ -4012,21 +4010,32 @@ var TodoList = function (_Component) {
 		//set message
 
 	}, {
-		key: 'setMessage',
-		value: function setMessage(message) {
+		key: 'toast',
+		value: function toast(text, icon) {
 			var _this7 = this;
 
-			this.messageLog.push(message);
+			var messages_ = {
+				icon: icon || 'check',
+				hide: false,
+				text: text
+			};
+
+			this.messages.push(messages_);
 			this.setState({
-				messageLog: this.messageLog
+				messages: this.messages
 			});
 
+			console.log(this.messages);
+
 			setTimeout(function () {
-				_this7.messageLog.shift();
+
+				messages_.hide = true;
 				_this7.setState({
-					messageLog: _this7.messageLog
+					messages: _this7.messages
 				});
-			}, 10000);
+
+				console.log(_this7.messages);
+			}, 5000);
 		}
 	}]);
 
@@ -4040,8 +4049,19 @@ TodoList.STATE = {
 	disable: {
 		value: false
 	},
-	messageLog: {
+	messages: {
 		value: []
+	},
+	language: {
+		value: {
+			done: 'Task successfully done',
+			update: 'Task successfully updated',
+			remove: 'Task successfully removed',
+			save: 'Task successfully saved',
+			title: 'Metal TodoList',
+			addTask: 'Add a new task',
+			notFound: 'Nothing here :/'
+		}
 	}
 };
 
@@ -4111,40 +4131,50 @@ goog.loadModule(function (exports) {
      */
     var $render = function $render(opt_data, opt_ijData, opt_ijData_deprecated) {
         opt_ijData = opt_ijData_deprecated || opt_ijData;
-        /** @type {!Array<{description: (!goog.soy.data.SanitizedContent|string), done: boolean, showEdit: boolean,}>} */
-        var tasks = soy.asserts.assertType(goog.isArray(opt_data.tasks), 'tasks', opt_data.tasks, '!Array<{description: (!goog.soy.data.SanitizedContent|string), done: boolean, showEdit: boolean,}>');
         /** @type {boolean} */
         var disable = soy.asserts.assertType(goog.isBoolean(opt_data.disable) || opt_data.disable === 1 || opt_data.disable === 0, 'disable', opt_data.disable, 'boolean');
         /** @type {?} */
-        var messageLog = opt_data.messageLog;
+        var language = opt_data.language;
+        /** @type {!Array<{hide: boolean, icon: (!goog.soy.data.SanitizedContent|string), text: (!goog.soy.data.SanitizedContent|string),}>} */
+        var messages = soy.asserts.assertType(goog.isArray(opt_data.messages), 'messages', opt_data.messages, '!Array<{hide: boolean, icon: (!goog.soy.data.SanitizedContent|string), text: (!goog.soy.data.SanitizedContent|string),}>');
+        /** @type {!Array<{description: (!goog.soy.data.SanitizedContent|string), done: boolean, showEdit: boolean,}>} */
+        var tasks = soy.asserts.assertType(goog.isArray(opt_data.tasks), 'tasks', opt_data.tasks, '!Array<{description: (!goog.soy.data.SanitizedContent|string), done: boolean, showEdit: boolean,}>');
         incrementalDom.elementOpenStart('div');
         incrementalDom.attr('class', 'todo-list');
         incrementalDom.elementOpenEnd();
         incrementalDom.elementOpenStart('div');
         incrementalDom.attr('class', 'todo-list__toast');
         incrementalDom.elementOpenEnd();
-        var message8List = messageLog;
-        var message8ListLen = message8List.length;
-        for (var message8Index = 0; message8Index < message8ListLen; message8Index++) {
-            var message8Data = message8List[message8Index];
-            $templateAlias1({ message: message8Data }, null, opt_ijData);
+        var message9List = messages;
+        var message9ListLen = message9List.length;
+        for (var message9Index = 0; message9Index < message9ListLen; message9Index++) {
+            var message9Data = message9List[message9Index];
+            $templateAlias1({ message: message9Data }, null, opt_ijData);
         }
         incrementalDom.elementClose('div');
+        if (disable) {
+            incrementalDom.elementOpenStart('div');
+            incrementalDom.attr('class', 'todo-list__loading-bar');
+            incrementalDom.elementOpenEnd();
+            $templateAlias2(null, null, opt_ijData);
+            incrementalDom.elementClose('div');
+        }
         incrementalDom.elementOpenStart('div');
-        incrementalDom.attr('class', disable ? '' : 'hide');
+        incrementalDom.attr('class', 'todo-list__content');
         incrementalDom.elementOpenEnd();
-        $templateAlias2(null, null, opt_ijData);
+        $header(opt_data, null, opt_ijData);
+        $body(opt_data, null, opt_ijData);
+        $footer(opt_data, null, opt_ijData);
         incrementalDom.elementClose('div');
-        $listTask(opt_data, null, opt_ijData);
-        $addTask(opt_data, null, opt_ijData);
         incrementalDom.elementClose('div');
     };
     exports.render = $render;
     /**
      * @typedef {{
-     *  tasks: !Array<{description: (!goog.soy.data.SanitizedContent|string), done: boolean, showEdit: boolean,}>,
      *  disable: boolean,
-     *  messageLog: ?,
+     *  language: ?,
+     *  messages: !Array<{hide: boolean, icon: (!goog.soy.data.SanitizedContent|string), text: (!goog.soy.data.SanitizedContent|string),}>,
+     *  tasks: !Array<{description: (!goog.soy.data.SanitizedContent|string), done: boolean, showEdit: boolean,}>,
      * }}
      */
     $render.Params;
@@ -4153,95 +4183,128 @@ goog.loadModule(function (exports) {
     }
 
     /**
-     * @param {$addTask.Params} opt_data
+     * @param {$header.Params} opt_data
      * @param {Object<string, *>=} opt_ijData
      * @param {Object<string, *>=} opt_ijData_deprecated
      * @return {void}
      * @suppress {checkTypes}
      */
-    var $addTask = function $addTask(opt_data, opt_ijData, opt_ijData_deprecated) {
+    var $header = function $header(opt_data, opt_ijData, opt_ijData_deprecated) {
+        opt_ijData = opt_ijData_deprecated || opt_ijData;
+        /** @type {?} */
+        var language = opt_data.language;
+        incrementalDom.elementOpenStart('div');
+        incrementalDom.attr('class', 'todo-list__header');
+        incrementalDom.elementOpenEnd();
+        incrementalDom.elementOpen('h1');
+        soyIdom.print(language.title);
+        incrementalDom.elementClose('h1');
+        incrementalDom.elementClose('div');
+    };
+    exports.header = $header;
+    /**
+     * @typedef {{
+     *  language: ?,
+     * }}
+     */
+    $header.Params;
+    if (goog.DEBUG) {
+        $header.soyTemplateName = 'TodoList.header';
+    }
+
+    /**
+     * @param {$body.Params} opt_data
+     * @param {Object<string, *>=} opt_ijData
+     * @param {Object<string, *>=} opt_ijData_deprecated
+     * @return {void}
+     * @suppress {checkTypes}
+     */
+    var $body = function $body(opt_data, opt_ijData, opt_ijData_deprecated) {
+        opt_ijData = opt_ijData_deprecated || opt_ijData;
+        /** @type {?} */
+        var language = opt_data.language;
+        /** @type {boolean} */
+        var disable = soy.asserts.assertType(goog.isBoolean(opt_data.disable) || opt_data.disable === 1 || opt_data.disable === 0, 'disable', opt_data.disable, 'boolean');
+        /** @type {!Array<{description: (!goog.soy.data.SanitizedContent|string), done: boolean, showEdit: boolean,}>} */
+        var tasks = soy.asserts.assertType(goog.isArray(opt_data.tasks), 'tasks', opt_data.tasks, '!Array<{description: (!goog.soy.data.SanitizedContent|string), done: boolean, showEdit: boolean,}>');
+        incrementalDom.elementOpenStart('div');
+        incrementalDom.attr('class', 'todo-list__body');
+        incrementalDom.elementOpenEnd();
+        incrementalDom.elementOpenStart('ul');
+        incrementalDom.attr('class', 'todo-list__list-group');
+        incrementalDom.elementOpenEnd();
+        var task46List = tasks;
+        var task46ListLen = task46List.length;
+        if (task46ListLen > 0) {
+            for (var task46Index = 0; task46Index < task46ListLen; task46Index++) {
+                var task46Data = task46List[task46Index];
+                var index__soy49 = task46Index;
+                $task({ task: task46Data, index: index__soy49, disable: disable }, null, opt_ijData);
+            }
+        } else {
+            incrementalDom.elementOpenStart('li');
+            incrementalDom.attr('class', 'todo-list__list-group__item ' + (disable ? 'hide' : ''));
+            incrementalDom.elementOpenEnd();
+            incrementalDom.elementOpenStart('button');
+            incrementalDom.attr('class', 'todo-list__description');
+            incrementalDom.elementOpenEnd();
+            soyIdom.print(language.notFound);
+            incrementalDom.elementClose('button');
+            incrementalDom.elementClose('li');
+        }
+        incrementalDom.elementClose('ul');
+        incrementalDom.elementClose('div');
+    };
+    exports.body = $body;
+    /**
+     * @typedef {{
+     *  language: ?,
+     *  disable: boolean,
+     *  tasks: !Array<{description: (!goog.soy.data.SanitizedContent|string), done: boolean, showEdit: boolean,}>,
+     * }}
+     */
+    $body.Params;
+    if (goog.DEBUG) {
+        $body.soyTemplateName = 'TodoList.body';
+    }
+
+    /**
+     * @param {$footer.Params} opt_data
+     * @param {Object<string, *>=} opt_ijData
+     * @param {Object<string, *>=} opt_ijData_deprecated
+     * @return {void}
+     * @suppress {checkTypes}
+     */
+    var $footer = function $footer(opt_data, opt_ijData, opt_ijData_deprecated) {
         opt_ijData = opt_ijData_deprecated || opt_ijData;
         /** @type {boolean} */
         var disable = soy.asserts.assertType(goog.isBoolean(opt_data.disable) || opt_data.disable === 1 || opt_data.disable === 0, 'disable', opt_data.disable, 'boolean');
+        /** @type {?} */
+        var language = opt_data.language;
         incrementalDom.elementOpenStart('div');
-        incrementalDom.attr('class', 'todo-list__add-task');
+        incrementalDom.attr('class', 'todo-list__footer');
         incrementalDom.elementOpenEnd();
-        incrementalDom.elementOpenStart('i');
-        incrementalDom.attr('class', 'fa fa-plus todo-list__icon-add-task');
-        incrementalDom.elementOpenEnd();
-        incrementalDom.elementClose('i');
         incrementalDom.elementOpenStart('input');
         incrementalDom.attr('id', 'inputAdd');
         if (disable) {
             incrementalDom.attr('disabled', '');
         }
         incrementalDom.attr('data-onchange', 'handleAddTask_');
-        incrementalDom.attr('placeholder', 'add a new task');
+        incrementalDom.attr('placeholder', language.addTask);
         incrementalDom.elementOpenEnd();
         incrementalDom.elementClose('input');
         incrementalDom.elementClose('div');
     };
-    exports.addTask = $addTask;
+    exports.footer = $footer;
     /**
      * @typedef {{
      *  disable: boolean,
+     *  language: ?,
      * }}
      */
-    $addTask.Params;
+    $footer.Params;
     if (goog.DEBUG) {
-        $addTask.soyTemplateName = 'TodoList.addTask';
-    }
-
-    /**
-     * @param {$listTask.Params} opt_data
-     * @param {Object<string, *>=} opt_ijData
-     * @param {Object<string, *>=} opt_ijData_deprecated
-     * @return {void}
-     * @suppress {checkTypes}
-     */
-    var $listTask = function $listTask(opt_data, opt_ijData, opt_ijData_deprecated) {
-        opt_ijData = opt_ijData_deprecated || opt_ijData;
-        /** @type {!Array<{description: (!goog.soy.data.SanitizedContent|string), done: boolean, showEdit: boolean,}>} */
-        var tasks = soy.asserts.assertType(goog.isArray(opt_data.tasks), 'tasks', opt_data.tasks, '!Array<{description: (!goog.soy.data.SanitizedContent|string), done: boolean, showEdit: boolean,}>');
-        /** @type {boolean} */
-        var disable = soy.asserts.assertType(goog.isBoolean(opt_data.disable) || opt_data.disable === 1 || opt_data.disable === 0, 'disable', opt_data.disable, 'boolean');
-        incrementalDom.elementOpenStart('div');
-        incrementalDom.attr('class', 'todo-list__list-task');
-        incrementalDom.elementOpenEnd();
-        incrementalDom.elementOpenStart('ul');
-        incrementalDom.attr('class', 'todo-list__list-group');
-        incrementalDom.elementOpenEnd();
-        incrementalDom.elementOpenStart('li');
-        incrementalDom.attr('class', 'todo-list__list-group__item');
-        incrementalDom.elementOpenEnd();
-        incrementalDom.elementOpen('h3');
-        incrementalDom.elementOpenStart('i');
-        incrementalDom.attr('class', 'fa fa-list-ul');
-        incrementalDom.elementOpenEnd();
-        incrementalDom.elementClose('i');
-        incrementalDom.text(' Metal TODO List');
-        incrementalDom.elementClose('h3');
-        incrementalDom.elementClose('li');
-        var task39List = tasks;
-        var task39ListLen = task39List.length;
-        for (var task39Index = 0; task39Index < task39ListLen; task39Index++) {
-            var task39Data = task39List[task39Index];
-            var index__soy42 = task39Index;
-            $task({ task: task39Data, index: index__soy42, disable: disable }, null, opt_ijData);
-        }
-        incrementalDom.elementClose('ul');
-        incrementalDom.elementClose('div');
-    };
-    exports.listTask = $listTask;
-    /**
-     * @typedef {{
-     *  tasks: !Array<{description: (!goog.soy.data.SanitizedContent|string), done: boolean, showEdit: boolean,}>,
-     *  disable: boolean,
-     * }}
-     */
-    $listTask.Params;
-    if (goog.DEBUG) {
-        $listTask.soyTemplateName = 'TodoList.listTask';
+        $footer.soyTemplateName = 'TodoList.footer';
     }
 
     /**
@@ -4260,7 +4323,10 @@ goog.loadModule(function (exports) {
         /** @type {boolean} */
         var disable = soy.asserts.assertType(goog.isBoolean(opt_data.disable) || opt_data.disable === 1 || opt_data.disable === 0, 'disable', opt_data.disable, 'boolean');
         incrementalDom.elementOpenStart('li');
-        incrementalDom.attr('class', 'todo-list__list-group__item ' + (task.done ? 'todo-list__list-group__item--done' : '') + ' ' + (task.showEdit ? 'todo-list__list-group__item--editing' : ''));
+        incrementalDom.attr('class', 'todo-list__list-group__item' + (task.done ? ' todo-list__list-group__item--done' : '') + (task.showEdit ? ' todo-list__list-group__item--editing' : ''));
+        incrementalDom.elementOpenEnd();
+        incrementalDom.elementOpenStart('div');
+        incrementalDom.attr('class', 'todo-list__checkbox');
         incrementalDom.elementOpenEnd();
         incrementalDom.elementOpenStart('input');
         if (task.done) {
@@ -4269,30 +4335,35 @@ goog.loadModule(function (exports) {
         if (disable) {
             incrementalDom.attr('disabled', '');
         }
-        incrementalDom.attr('class', 'todo-list__checkbox');
         incrementalDom.attr('data-index', index);
         incrementalDom.attr('data-onchange', 'handleDoneTask_');
         incrementalDom.attr('type', 'checkbox');
         incrementalDom.elementOpenEnd();
         incrementalDom.elementClose('input');
+        incrementalDom.elementClose('div');
         incrementalDom.elementOpenStart('div');
         incrementalDom.attr('class', 'todo-list__content-item');
+        incrementalDom.elementOpenEnd();
+        incrementalDom.elementOpenStart('div');
+        incrementalDom.attr('class', 'todo-list__description ' + (task.showEdit ? 'hide' : ''));
         incrementalDom.elementOpenEnd();
         incrementalDom.elementOpenStart('button');
         if (disable) {
             incrementalDom.attr('disabled', '');
         }
-        incrementalDom.attr('class', 'todo-list__description ' + (task.showEdit ? 'hide' : ''));
         incrementalDom.attr('data-index', index);
         incrementalDom.attr('data-onclick', 'handleEditTask_');
         incrementalDom.elementOpenEnd();
         soyIdom.print(task.description);
         incrementalDom.elementClose('button');
+        incrementalDom.elementClose('div');
+        incrementalDom.elementOpenStart('div');
+        incrementalDom.attr('class', 'todo-list__description todo-list__description--edit-mode ' + (task.showEdit ? '' : 'hide'));
+        incrementalDom.elementOpenEnd();
         incrementalDom.elementOpenStart('input');
         if (disable) {
             incrementalDom.attr('disabled', '');
         }
-        incrementalDom.attr('class', 'todo-list__description--edit-mode ' + (task.showEdit ? '' : 'hide'));
         incrementalDom.attr('data-index', index);
         incrementalDom.attr('data-onchange', 'handleSaveEditTask_');
         incrementalDom.attr('id', 'inputEdit');
@@ -4301,20 +4372,24 @@ goog.loadModule(function (exports) {
         incrementalDom.elementOpenEnd();
         incrementalDom.elementClose('input');
         incrementalDom.elementClose('div');
+        incrementalDom.elementClose('div');
+        incrementalDom.elementOpenStart('div');
+        incrementalDom.attr('class', 'todo-list__btn--remove-task');
+        incrementalDom.elementOpenEnd();
         incrementalDom.elementOpenStart('button');
         if (disable) {
             incrementalDom.attr('disabled', '');
         }
-        incrementalDom.attr('class', 'todo-list__btn--remove-task');
         incrementalDom.attr('data-index', index);
         incrementalDom.attr('data-onclick', 'handleRemoveTask_');
         incrementalDom.attr('type', 'button');
         incrementalDom.elementOpenEnd();
         incrementalDom.elementOpenStart('i');
-        incrementalDom.attr('class', 'fa fa-window-close');
+        incrementalDom.attr('class', 'fa fa-times');
         incrementalDom.elementOpenEnd();
         incrementalDom.elementClose('i');
         incrementalDom.elementClose('button');
+        incrementalDom.elementClose('div');
         incrementalDom.elementClose('li');
     };
     exports.task = $task;
@@ -4330,12 +4405,14 @@ goog.loadModule(function (exports) {
         $task.soyTemplateName = 'TodoList.task';
     }
 
-    exports.render.params = ["tasks", "disable", "messageLog"];
-    exports.render.types = { "tasks": "list<[description: string, done: bool, showEdit: bool]>", "disable": "bool", "messageLog": "?" };
-    exports.addTask.params = ["disable"];
-    exports.addTask.types = { "disable": "bool" };
-    exports.listTask.params = ["tasks", "disable"];
-    exports.listTask.types = { "tasks": "list<[description: string, done: bool, showEdit: bool]>", "disable": "bool" };
+    exports.render.params = ["disable", "language", "messages", "tasks"];
+    exports.render.types = { "disable": "bool", "language": "?", "messages": "list<[icon: string, hide: bool, text: string]>", "tasks": "list<[description: string, done: bool, showEdit: bool]>" };
+    exports.header.params = ["language"];
+    exports.header.types = { "language": "?" };
+    exports.body.params = ["language", "disable", "tasks"];
+    exports.body.types = { "language": "?", "disable": "bool", "tasks": "list<[description: string, done: bool, showEdit: bool]>" };
+    exports.footer.params = ["disable", "language"];
+    exports.footer.types = { "disable": "bool", "language": "?" };
     exports.task.params = ["task", "index", "disable"];
     exports.task.types = { "task": "[description: string, done: bool, showEdit: bool]", "index": "int", "disable": "bool" };
     exports.templates = templates = exports;
@@ -17779,18 +17856,23 @@ goog.loadModule(function (exports) {
    */
   var $render = function $render(opt_data, opt_ijData, opt_ijData_deprecated) {
     opt_ijData = opt_ijData_deprecated || opt_ijData;
-    /** @type {!goog.soy.data.SanitizedContent|string} */
-    var message = soy.asserts.assertType(goog.isString(opt_data.message) || opt_data.message instanceof goog.soy.data.SanitizedContent, 'message', opt_data.message, '!goog.soy.data.SanitizedContent|string');
+    /** @type {{hide: boolean, icon: (!goog.soy.data.SanitizedContent|string), text: (!goog.soy.data.SanitizedContent|string),}} */
+    var message = soy.asserts.assertType(goog.isObject(opt_data.message), 'message', opt_data.message, '{hide: boolean, icon: (!goog.soy.data.SanitizedContent|string), text: (!goog.soy.data.SanitizedContent|string),}');
     incrementalDom.elementOpenStart('div');
-    incrementalDom.attr('class', 'toast');
+    incrementalDom.attr('class', 'toast ' + (message.hide ? 'toast--hide' : ''));
     incrementalDom.elementOpenEnd();
-    soyIdom.print(message);
+    incrementalDom.elementOpenStart('i');
+    incrementalDom.attr('class', 'toast__icon fa fa-' + message.icon);
+    incrementalDom.elementOpenEnd();
+    incrementalDom.elementClose('i');
+    incrementalDom.text(' ');
+    soyIdom.print(message.text);
     incrementalDom.elementClose('div');
   };
   exports.render = $render;
   /**
    * @typedef {{
-   *  message: (!goog.soy.data.SanitizedContent|string),
+   *  message: {hide: boolean, icon: (!goog.soy.data.SanitizedContent|string), text: (!goog.soy.data.SanitizedContent|string),},
    * }}
    */
   $render.Params;
@@ -17799,7 +17881,7 @@ goog.loadModule(function (exports) {
   }
 
   exports.render.params = ["message"];
-  exports.render.types = { "message": "string" };
+  exports.render.types = { "message": "[icon: string, hide: bool, text: string]" };
   exports.templates = templates = exports;
   return exports;
 });
@@ -17862,7 +17944,7 @@ exports = module.exports = __webpack_require__(11)(undefined);
 
 
 // module
-exports.push([module.i, ".toast {\n  background-color: #323232;\n  border-radius: 4px;\n  color: #fff;\n  margin: 0.5rem 0 0;\n  max-width: 100%;\n  padding: 1rem 2rem;\n  width: 300px; }\n", ""]);
+exports.push([module.i, ".toast {\n  opacity: 0;\n  transform: translateY(100%);\n  visibility: 100%;\n  animation: fadeInUp 0.5s ease-in-out forwards;\n  align-items: center;\n  background-color: #323232;\n  border-radius: 4px;\n  color: #fff;\n  display: flex;\n  height: 50px;\n  margin: 0 0 0.5rem;\n  max-width: 100%;\n  padding: 0 2rem;\n  width: 300px; }\n  .toast.toast--hide {\n    animation: fadeOutUp 0.5s ease-in-out forwards; }\n  .toast .toast__icon {\n    margin-right: 1rem; }\n\n@keyframes fadeInUp {\n  to {\n    opacity: 1;\n    transform: translateY(0);\n    visibility: 0; } }\n\n@keyframes fadeOutUp {\n  0% {\n    opacity: 1;\n    transform: translateY(0);\n    visibility: 0; }\n  50%, 100% {\n    opacity: 0;\n    transform: translateY(-100%);\n    visibility: -100%;\n    margin: 0; }\n  100% {\n    height: 0; } }\n", ""]);
 
 // exports
 
@@ -17904,10 +17986,10 @@ if(false) {
 
 exports = module.exports = __webpack_require__(11)(undefined);
 // imports
-
+exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Merriweather);", ""]);
 
 // module
-exports.push([module.i, ".hide {\n  display: none !important; }\n\n.todo-list .todo-list__list-group__item {\n  display: flex;\n  justify-content: space-between;\n  align-items: center; }\n\n.todo-list .todo-list__description, .todo-list .todo-list__description--edit-mode, .todo-list, .todo-list .todo-list__content-item {\n  width: 100%; }\n\n.todo-list .todo-list__description, .todo-list .todo-list__description--edit-mode {\n  background-color: transparent;\n  margin-right: 12px;\n  padding: 12px; }\n\n* {\n  box-sizing: border-box; }\n\nbody {\n  background-color: #f0f0f0; }\n\nbody, input, button {\n  font-family: helvetica, sans-serif;\n  font-size: 14px;\n  line-height: 1.4em; }\n\n.todo-list {\n  background-color: #fff;\n  border: 1px solid #e3e3e3;\n  box-shadow: 5px 5px #e3e3e3;\n  margin: 60px auto;\n  max-width: 700px; }\n  .todo-list .todo-list__add-task {\n    position: relative; }\n    .todo-list .todo-list__add-task input {\n      border: none;\n      padding: 12px 12px 12px 35px;\n      width: 100%; }\n  .todo-list .todo-list__btn--remove-task {\n    background-color: transparent;\n    border: none;\n    margin-left: 12px;\n    padding: 0; }\n  .todo-list .todo-list__checkbox {\n    margin: 17px 0 auto; }\n  .todo-list .todo-list__description {\n    background-color: transparent;\n    background-image: none;\n    border: none;\n    text-align: left; }\n  .todo-list .todo-list__description--edit-mode {\n    border: none; }\n  .todo-list .todo-list__icon-add-task {\n    bottom: 0;\n    height: 13px;\n    left: 12px;\n    margin: auto;\n    position: absolute;\n    top: 0; }\n  .todo-list .todo-list__list-group {\n    margin: 0;\n    padding: 0; }\n  .todo-list .todo-list__list-group__item {\n    border-bottom: 1px solid #e3e3e3;\n    max-height: 300px;\n    overflow: auto;\n    padding: 0 12px;\n    list-style: none; }\n    .todo-list .todo-list__list-group__item:hover:not(.todo-list__list-group__item--editing) {\n      background-color: #f0f0f0; }\n    .todo-list .todo-list__list-group__item.removing {\n      overflow: hidden;\n      max-height: 0;\n      transition: max-height .5s ease-in-out; }\n  .todo-list .todo-list__list-group__item--done {\n    opacity: .4; }\n    .todo-list .todo-list__list-group__item--done .todo-list__description {\n      text-decoration: line-through; }\n  .todo-list .todo-list__list-group__item--editing {\n    background-color: #fffda6; }\n  .todo-list .todo-list__toast {\n    position: fixed;\n    right: 36px;\n    bottom: 36px; }\n", ""]);
+exports.push([module.i, "* {\n  box-sizing: border-box; }\n\nbody {\n  background-color: #f0f0f0;\n  margin: 0;\n  background: url(\"https://pre00.deviantart.net/b210/th/pre/f/2014/159/a/5/mac_wallpaper___flat_colors___1920x1200_by_dakirby309-d7lmemf.jpg\");\n  background-size: cover; }\n\nbody, input, button {\n  font-family: helvetica, sans-serif;\n  font-size: 16px;\n  line-height: 1.4em; }\n\nh1, h2, h3, h4, h5, h6 {\n  font-family: \"Merriweather\", serif; }\n\n.hide {\n  display: none !important; }\n\n.todo-list .todo-list__loading-bar {\n  position: absolute;\n  left: 0;\n  top: 0;\n  width: 100%; }\n\n.todo-list .todo-list__list-group {\n  margin: 0;\n  padding: 0; }\n  .todo-list .todo-list__list-group .todo-list__list-group__item {\n    display: flex;\n    justify-content: space-between;\n    padding: .5rem 1rem;\n    align-items: center; }\n    .todo-list .todo-list__list-group .todo-list__list-group__item:hover {\n      background-color: #e3e3e3; }\n      .todo-list .todo-list__list-group .todo-list__list-group__item:hover .todo-list__btn--remove-task {\n        opacity: 1; }\n    .todo-list .todo-list__list-group .todo-list__list-group__item.todo-list__list-group__item--editing {\n      background-color: #fffda6; }\n    .todo-list .todo-list__list-group .todo-list__list-group__item.todo-list__list-group__item--done .todo-list__description button {\n      text-decoration: line-through; }\n  .todo-list .todo-list__list-group .todo-list__content-item {\n    width: 100%; }\n\n.todo-list .todo-list__description {\n  border: 0;\n  margin: 0;\n  width: 100%;\n  height: 100%;\n  text-align: left;\n  padding: 0 1rem;\n  border-radius: 6px;\n  background-color: transparent; }\n  .todo-list .todo-list__description input, .todo-list .todo-list__description button {\n    width: 100%;\n    padding: 1rem 0;\n    background-color: transparent;\n    border: 0;\n    text-align: left; }\n\n.todo-list .todo-list__checkbox input,\n.todo-list .todo-list__btn--remove-task button {\n  padding: 0;\n  margin: 0;\n  border: 0;\n  background-color: transparent; }\n\n.todo-list .todo-list__btn--remove-task {\n  border: 0;\n  opacity: 0; }\n\n.todo-list .todo-list__content {\n  box-shadow: 12px 18px 48px 0 rgba(14, 20, 26, 0.1);\n  width: 100%;\n  height: calc(100vh - 96px);\n  max-width: 700px;\n  margin: 48px auto;\n  display: flex;\n  flex-direction: column;\n  justify-content: space-between;\n  background-color: #fff;\n  border-radius: 6px; }\n\n.todo-list .todo-list__toast {\n  position: fixed;\n  right: 12px;\n  top: 12px; }\n\n.todo-list .todo-list__header,\n.todo-list .todo-list__footer {\n  display: flex;\n  align-items: center; }\n\n.todo-list .todo-list__header {\n  height: 100px;\n  margin: 0 2rem; }\n\n.todo-list .todo-list__body {\n  height: calc(100% - 200px);\n  overflow: auto; }\n\n.todo-list .todo-list__footer {\n  height: 100px; }\n  .todo-list .todo-list__footer input {\n    box-shadow: 12px 18px 48px 0 rgba(14, 20, 26, 0.4);\n    width: calc(100% - 3rem);\n    height: calc(100% - 3rem);\n    margin: 1.5rem;\n    padding: 1rem 2rem;\n    border: 0;\n    border-radius: 6px; }\n", ""]);
 
 // exports
 
