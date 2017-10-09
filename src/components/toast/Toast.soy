@@ -4,9 +4,9 @@
  * Toast
  */
 {template .render}
-	{@param message: string}
+	{@param message: [icon: string, hide: bool, text: string]}
 
-	<div class="toast">
-		{$message}
+	<div class="toast {$message.hide ? 'toast--hide' : ''}">
+		<i class="toast__icon fa fa-{$message.icon}"></i> {$message.text}
 	</div>
 {/template}

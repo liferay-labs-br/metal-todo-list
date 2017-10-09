@@ -7,7 +7,6 @@ import Soy from 'metal-soy';
 import './toast.scss';
 
 class Toast extends Component {
-
 }
 
 Soy.register(Toast, templates);
