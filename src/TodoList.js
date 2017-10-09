@@ -5,7 +5,7 @@ import Component from 'metal-component';
 import Soy from 'metal-soy';
 import WeDeploy from 'wedeploy';
 import './components/loading-bar/LoadingBar';
-import Toast from './components/toast/Toast';
+import './components/toast/Toast';
 
 import './todo-list.scss';
 
@@ -62,7 +62,7 @@ class TodoList extends Component {
 			});
 
 			//message
-			this.setMessage('task saved successfully');
+			this.toast(this.language.save);
 
 			//clean input
 			eventTarget.value = "";
@@ -78,7 +78,7 @@ class TodoList extends Component {
 	handleEditTask_(event) {
 		let eventTarget = event.delegateTarget;
 		let task = this.getTask(eventTarget);
-		let parent = eventTarget.parentNode;
+		let parent = eventTarget.parentNode.parentNode;
 		let inputEdit = parent.querySelector('#inputEdit');
 
 		task.showEdit = true;
@@ -119,7 +119,7 @@ class TodoList extends Component {
 			});
 
 			//message
-			this.setMessage('task edited successfully');
+			this.toast(this.language.update, 'pencil');
 
 		}).catch(error => {
 			console.error(error);
@@ -151,7 +151,7 @@ class TodoList extends Component {
 			});
 
 			//message
-			this.setMessage('task marked successfully completed');
+			this.toast(this.language.done);
 
 		}).catch(error => {
 			console.error(error);
@@ -184,7 +184,7 @@ class TodoList extends Component {
 				});
 
 				//message
-			this.setMessage('task removed successfully');
+			this.toast(this.language.remove, 'trash');
 
 			})
 			.catch(function (error) {
@@ -210,20 +210,29 @@ class TodoList extends Component {
 	}
 
 	//set message
-	setMessage(message) {
+	toast(text, icon) {
+		let messages_ = {
+			icon: icon || 'check',
+			hide: false,
+			text
+		}
 
-		this.messageLog.push(message);
+		this.messages.push(messages_);
 		this.setState({
-			messageLog: this.messageLog
+			messages: this.messages
 		});
 
+		console.log(this.messages);
+
 		setTimeout(() => {
-			this.messageLog.shift();
+
+			messages_.hide = true;
 			this.setState({
-				messageLog: this.messageLog
+				messages: this.messages
 			});
 
-		}, 10000);
+			console.log(this.messages);
+		}, 5000);
 	}
 
 }
@@ -235,14 +244,23 @@ TodoList.STATE = {
 	disable: {
 		value: false
 	},
-	messageLog: {
+	messages: {
 		value: []
+	},
+	language: {
+		value: {
+			done: 'Task successfully done',
+			update: 'Task successfully updated',
+			remove: 'Task successfully removed',
+			save: 'Task successfully saved',
+			title: 'Metal TodoList',
+			addTask: 'Add a new task',
+			notFound: 'Nothing here :/'
+		}
 	}
 }
 
 Soy.register(TodoList, templates);
 
-export {
-	TodoList
-};
+export { TodoList };
 export default TodoList;

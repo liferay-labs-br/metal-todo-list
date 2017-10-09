@@ -4,15 +4,16 @@
  * This renders the component's whole content.
  */
 {template .render}
-	{@param tasks: list<[description: string, done: bool, showEdit: bool]>}
 	{@param disable: bool}
-	{@param messageLog: ?}
+	{@param language: ?}
+	{@param messages: list<[icon: string, hide: bool, text: string]>}
+	{@param tasks: list<[description: string, done: bool, showEdit: bool]>}
 
 	<div class="todo-list">
 
 		//Toast
 		<div class="todo-list__toast">
-			{foreach $message in $messageLog}
+			{foreach $message in $messages}
 				{call Toast.render}
 					{param message: $message /}
 				{/call}
@@ -20,52 +21,58 @@
 		</div>
 
 		//Progress Bar
-		<div class="{$disable ? '' : 'hide'}">
-			{call LoadingBar.render /}
+		{if $disable}
+			<div class="todo-list__loading-bar">
+				{call LoadingBar.render /}
+			</div>
+		{/if}
+
+		<div class="todo-list__content">
+
+			//header
+			{call .header}
+				{param language: $language /}
+			{/call}
+
+			//body
+			{call .body}
+				{param tasks: $tasks /}
+				{param disable: $disable /}
+				{param language: $language /}
+			{/call}
+
+			//footer
+			{call .footer}
+				{param disable: $disable /}
+				{param language: $language /}
+			{/call}
+
 		</div>
-
-		//list task
-		{call .listTask}
-			{param tasks: $tasks /}
-			{param disable: $disable /}
-		{/call}
-
-		//template add task
-		{call .addTask}
-			{param disable: $disable /}
-		{/call}
 
 	</div>
 {/template}
 
 /**
- * template add task
+ * template header add task
  */
- {template .addTask}
-	{@param disable: bool}
+{template .header}
+	{@param language: ?}
 
-	<div class="todo-list__add-task">
-		<i class="fa fa-plus todo-list__icon-add-task"></i>
-		<input id="inputAdd" {if $disable}disabled{/if}
-			data-onchange="handleAddTask_"
-			placeholder="add a new task">
+	<div class="todo-list__header">
+		<h1>{$language.title}</h1>
 	</div>
- {/template}
+{/template}
 
- /**
+/**
  * template list task
  */
-{template .listTask}
-	{@param tasks: list<[description: string, done: bool, showEdit: bool]>}
+{template .body}
+	{@param language: ?}
 	{@param disable: bool}
+	{@param tasks: list<[description: string, done: bool, showEdit: bool]>}
 
-	<div class="todo-list__list-task">
+	<div class="todo-list__body">
 		<ul class="todo-list__list-group">
-			<li class="todo-list__list-group__item">
-				<h3>
-					<i class="fa fa-list-ul"></i> Metal TODO List
-				</h3>
-			</li>
 			{foreach $task in $tasks}
 				{let $index: index($task) /}
 				{call .task}
@@ -73,12 +80,30 @@
 					{param index: $index /}
 					{param disable: $disable /}
 				{/call}
+				{ifempty}
+					<li class="todo-list__list-group__item {$disable ? 'hide' : ''}">
+						<button class="todo-list__description">{$language.notFound}</button>
+					</li>
 			{/foreach}
 		</ul>
 	</div>
 {/template}
 
- /**
+/**
+ * template footer add task
+ */
+{template .footer}
+{@param disable: bool}
+{@param language: ?}
+
+<div class="todo-list__footer">
+	<input id="inputAdd" {if $disable}disabled{/if}
+		data-onchange="handleAddTask_"
+		placeholder="{$language.addTask}">
+</div>
+{/template}
+
+/**
  * template list task
  */
 {template .task}
@@ -86,41 +111,47 @@
 	{@param index: int}
 	{@param disable: bool}
 
-	<li class="todo-list__list-group__item {$task.done ? 'todo-list__list-group__item--done' : ''} {$task.showEdit ? 'todo-list__list-group__item--editing' : ''}">
+	<li class="todo-list__list-group__item
+		{$task.done ? ' todo-list__list-group__item--done' : ''}
+		{$task.showEdit ? ' todo-list__list-group__item--editing' : ''}">
 
 		//checkbox
-		<input {if $task.done}checked{/if}
-			{if $disable}disabled{/if}
-			class="todo-list__checkbox"
-			data-index="{$index}"
-			data-onchange="handleDoneTask_"
-			type="checkbox">
+		<div class="todo-list__checkbox">
+			<input {if $task.done}checked{/if}
+				{if $disable}disabled{/if}
+				data-index="{$index}"
+				data-onchange="handleDoneTask_"
+				type="checkbox">
+		</div>
 
 		//description
 		<div class="todo-list__content-item">
 
-			<button {if $disable}disabled{/if}
-				class="todo-list__description {$task.showEdit ? 'hide' : ''}"
-				data-index="{$index}"
-				data-onclick="handleEditTask_">{$task.description}</button>
+			<div class="todo-list__description {$task.showEdit ? 'hide' : ''}">
+				<button {if $disable}disabled{/if}
+					data-index="{$index}"
+					data-onclick="handleEditTask_">{$task.description}</button>
+			</div>
 
-			<input {if $disable}disabled{/if}
-				class="todo-list__description--edit-mode {$task.showEdit ? '' : 'hide'}"
-				data-index="{$index}"
-				data-onchange="handleSaveEditTask_"
-				id="inputEdit"
-				type="text"
-				value="{$task.description}">
+			<div class="todo-list__description todo-list__description--edit-mode {$task.showEdit ? '' : 'hide'}">
+				<input {if $disable}disabled{/if}
+					data-index="{$index}"
+					data-onchange="handleSaveEditTask_"
+					id="inputEdit"
+					type="text"
+					value="{$task.description}">
+			</div>
 
 		</div>
 
 		//remove
-		<button {if $disable}disabled{/if}
-		class="todo-list__btn--remove-task"
-			data-index="{$index}"
-			data-onclick="handleRemoveTask_"
-			type="button">
-				<i class="fa fa-window-close"></i>
-			</button>
+		<div class="todo-list__btn--remove-task">
+			<button {if $disable}disabled{/if}
+				data-index="{$index}"
+				data-onclick="handleRemoveTask_"
+				type="button">
+					<i class="fa fa-times"></i>
+				</button>
+		</div>
 	</li>
 {/template}
