@@ -22,10 +22,7 @@ class TodoList extends Component {
 		WeDeploy.data(DB).get(PATH).then(tasks => {
 
 			this.setState({
-				disable: false
-			});
-
-			this.setState({
+				disable: false,
 				tasks: tasks
 			});
 
@@ -40,7 +37,7 @@ class TodoList extends Component {
 	handleAddTask_(event) {
 		let eventTarget = event.delegateTarget;
 		let index = this.tasks.length;
-		let inputAdd = document.querySelector("#inputAdd");
+		let inputAdd = document.getElementById("inputAdd");
 
 		this.setState({
 			disable: true
@@ -52,12 +49,12 @@ class TodoList extends Component {
 			showEdit: false
 		}).then(response => {
 
-			this.setState({
-				disable: false
-			});
+			console.log(response);
 
 			this.tasks.splice(index, 1, response);
+
 			this.setState({
+				disable: false,
 				tasks: this.tasks
 			});
 
@@ -111,10 +108,7 @@ class TodoList extends Component {
 		}).then(response => {
 
 			this.setState({
-				tasks: this.tasks
-			});
-
-			this.setState({
+				tasks: this.tasks,
 				disable: false
 			});
 
@@ -143,10 +137,7 @@ class TodoList extends Component {
 			task.done = !task.done;
 
 			this.setState({
-				tasks: this.tasks
-			});
-
-			this.setState({
+				tasks: this.tasks,
 				disable: false
 			});
 
@@ -176,10 +167,7 @@ class TodoList extends Component {
 
 				this.tasks.splice(index, 1);
 				this.setState({
-					tasks: this.tasks
-				});
-
-				this.setState({
+					tasks: this.tasks,
 					disable: false
 				});
 
