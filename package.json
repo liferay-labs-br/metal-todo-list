@@ -21,7 +21,7 @@
 		"postinstall": "npm run build",
 		"prepublish": "npm run soy && npm run compile",
 		"soy": "metalsoy --soyDeps node_modules/metal*/src/**/*.soy node_modules/clay*/src/**/*.soy",
-		"test": "npm run soy && karma start",
+		"test": "npm run soy && jest",
 		"dev": "concurrently -k 'npm run soy:watch' 'npm run start'",
 		"soy:watch": "metal-soy-watch",
 		"start": "webpack-dev-server --open"
@@ -35,7 +35,6 @@
 		]
 	},
 	"dependencies": {
-		"bootstrap": "^4.0.0-beta",
 		"font-awesome": "^4.7.0",
 		"metal-soy": "^2.0.0",
 		"wedeploy": "^3.5.0"
@@ -51,9 +50,8 @@
 		"http-server": "^0.9.0",
 		"identity-obj-proxy": "^3.0.0",
 		"jest": "^20.0.4",
-		"karma-sourcemap-loader": "^0.3.7",
-		"karma-webpack": "^2.0.4",
-		"metal-karma-config": "^2.3.1",
+		"metal-jest-serializer": "^1.0.1",
+		"metal-lerna-jest-resolver": "^1.0.0",
 		"metal-soy-watch": "github:fernandosouza/metal-soy-watch#v2.0",
 		"metal-tools-soy": "^4.2.1",
 		"node-sass": "^4.5.3",

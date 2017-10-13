@@ -3,7 +3,7 @@
 import TodoList from '../src/TodoList';
 
 describe('TodoList', function() {
-	it('should be tested', function() {
-		assert.fail('No tests for this module yet.');
+	it('should be pass correctly formatted configuration options to TodoList.js', () => {
+		const todoList  = new TodoList({});
 	});
 });
