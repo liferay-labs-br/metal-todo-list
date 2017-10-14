@@ -15,14 +15,11 @@ const PATH = 'tasks';
 class TodoList extends Component {
 
 	created() {
-		this.setState({
-			disable: true
-		});
 
 		WeDeploy.data(DB).get(PATH).then(tasks => {
 
 			this.setState({
-				disable: false,
+				locked: false,
 				tasks: tasks
 			});
 
@@ -41,6 +38,7 @@ class TodoList extends Component {
 
 		this.setState({
 			disable: true
+			locked: true
 		});
 
 		WeDeploy.data(DB).create(PATH, {
@@ -52,7 +50,7 @@ class TodoList extends Component {
 			this.tasks.splice(index, 1, response);
 
 			this.setState({
-				disable: false,
+				locked: false,
 				tasks: this.tasks
 			});
 
@@ -97,7 +95,7 @@ class TodoList extends Component {
 		task.showEdit = false;
 
 		this.setState({
-			disable: true
+			locked: true
 		});
 
 		WeDeploy.data(DB).update(`${PATH}/${task.id}`, {
@@ -107,7 +105,7 @@ class TodoList extends Component {
 
 			this.setState({
 				tasks: this.tasks,
-				disable: false
+				locked: false
 			});
 
 			//message
@@ -125,7 +123,7 @@ class TodoList extends Component {
 		let task = this.getTask(event.delegateTarget);
 
 		this.setState({
-			disable: true
+			locked: true
 		});
 
 		WeDeploy.data(DB).update(`${PATH}/${task.id}`, {
@@ -136,7 +134,7 @@ class TodoList extends Component {
 
 			this.setState({
 				tasks: this.tasks,
-				disable: false
+				locked: false
 			});
 
 			//message
@@ -157,7 +155,7 @@ class TodoList extends Component {
 		let task = this.getTask(eventTarget);
 
 		this.setState({
-			disable: true
+			locked: true
 		});
 
 		WeDeploy.data(DB).delete(`${PATH}/${task.id}`)
@@ -166,7 +164,7 @@ class TodoList extends Component {
 				this.tasks.splice(index, 1);
 				this.setState({
 					tasks: this.tasks,
-					disable: false
+					locked: false
 				});
 
 				//message
@@ -224,11 +222,23 @@ class TodoList extends Component {
 }
 
 TodoList.STATE = {
+
+	/**
+	 * The path of tasks on Database
+	 * @instance
+	 * @memberof Toast
+	 * @type {Object}
+	 */
+	db: Config.shapeOf({
+		path: Config.string().required(),
+		url: Config.string().required(),
+	}).required(),
+
 	tasks: {
 		value: []
 	},
-	disable: {
-		value: false
+	locked: {
+		value: true
 	},
 	messages: {
 		value: []

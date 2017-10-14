@@ -4,7 +4,7 @@
  * This renders the component's whole content.
  */
 {template .render}
-	{@param disable: bool}
+	{@param locked: bool}
 	{@param language: ?}
 	{@param messages: list<[icon: string, hide: bool, text: string]>}
 	{@param tasks: list<[description: string, done: bool, showEdit: bool]>}
@@ -21,7 +21,7 @@
 		</div>
 
 		//Progress Bar
-		{if $disable}
+		{if $locked}
 			<div class="todo-list__loading-bar">
 				{call LoadingBar.render /}
 			</div>
@@ -37,13 +37,13 @@
 			//body
 			{call .body}
 				{param tasks: $tasks /}
-				{param disable: $disable /}
+				{param locked: $locked /}
 				{param language: $language /}
 			{/call}
 
 			//footer
 			{call .footer}
-				{param disable: $disable /}
+				{param locked: $locked /}
 				{param language: $language /}
 			{/call}
 
@@ -68,7 +68,7 @@
  */
 {template .body}
 	{@param language: ?}
-	{@param disable: bool}
+	{@param locked: bool}
 	{@param tasks: list<[description: string, done: bool, showEdit: bool]>}
 
 	<div class="todo-list__body">
@@ -78,10 +78,10 @@
 				{call .task}
 					{param task: $task /}
 					{param index: $index /}
-					{param disable: $disable /}
+					{param locked: $locked /}
 				{/call}
 				{ifempty}
-					<li class="todo-list__list-group__item {$disable ? 'hide' : ''}">
+					<li class="todo-list__list-group__item {$locked ? 'hide' : ''}">
 						<button class="todo-list__description">{$language.notFound}</button>
 					</li>
 			{/foreach}
@@ -93,11 +93,11 @@
  * template footer add task
  */
 {template .footer}
-{@param disable: bool}
+{@param locked: bool}
 {@param language: ?}
 
 <div class="todo-list__footer">
-	<input id="inputAdd" {if $disable}disabled{/if}
+	<input id="inputAdd" {if $locked}disabled{/if}
 		data-onchange="handleAddTask_"
 		placeholder="{$language.addTask}">
 </div>
@@ -109,7 +109,7 @@
 {template .task}
 	{@param task: [description: string, done: bool, showEdit: bool]}
 	{@param index: int}
-	{@param disable: bool}
+	{@param locked: bool}
 
 	<li class="todo-list__list-group__item
 		{$task.done ? ' todo-list__list-group__item--done' : ''}
@@ -118,7 +118,7 @@
 		//checkbox
 		<div class="todo-list__checkbox">
 			<input {if $task.done}checked{/if}
-				{if $disable}disabled{/if}
+				{if $locked}disabled{/if}
 				data-index="{$index}"
 				data-onchange="handleDoneTask_"
 				type="checkbox">
@@ -128,13 +128,13 @@
 		<div class="todo-list__content-item">
 
 			<div class="todo-list__description {$task.showEdit ? 'hide' : ''}">
-				<button {if $disable}disabled{/if}
+				<button {if $locked}disabled{/if}
 					data-index="{$index}"
 					data-onclick="handleEditTask_">{$task.description}</button>
 			</div>
 
 			<div class="todo-list__description todo-list__description--edit-mode {$task.showEdit ? '' : 'hide'}">
-				<input {if $disable}disabled{/if}
+				<input {if $locked}disabled{/if}
 					data-index="{$index}"
 					data-onchange="handleSaveEditTask_"
 					id="inputEdit"
@@ -146,7 +146,7 @@
 
 		//remove
 		<div class="todo-list__btn--remove-task">
-			<button {if $disable}disabled{/if}
+			<button {if $locked}disabled{/if}
 				data-index="{$index}"
 				data-onclick="handleRemoveTask_"
 				type="button">
