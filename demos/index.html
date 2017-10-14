@@ -9,7 +9,12 @@
 </head>
 <body>
 	<script type="text/javascript">
-		new metal.TodoList();
+		new metal.TodoList({
+			db: {
+				path: 'tasks',
+				url: 'https://db-todolist.wedeploy.io'
+			}
+		});
 	</script>
 </body>
 </html>

@@ -10,14 +10,11 @@ import './components/toast/Toast';
 
 import './todo-list.scss';
 
-const DB = 'https://db-todolist.wedeploy.io';
-const PATH = 'tasks';
-
 class TodoList extends Component {
 
 	created() {
 
-		WeDeploy.data(DB).get(PATH).then(tasks => {
+		WeDeploy.data(this.db.url).get(this.db.path).then(tasks => {
 
 			this.setState({
 				locked: false,
@@ -38,17 +35,16 @@ class TodoList extends Component {
 		let inputAdd = document.getElementById("inputAdd");
 
 		this.setState({
-			disable: true
 			locked: true
 		});
 
-		WeDeploy.data(DB).create(PATH, {
+		WeDeploy.data(this.db.url).create(this.db.path, {
 			description: eventTarget.value,
 			done: false,
 			showEdit: false
-		}).then(response => {
+		}).then(task => {
 
-			this.tasks.splice(index, 1, response);
+			this.tasks.splice(index, 1, task);
 
 			this.setState({
 				locked: false,
@@ -99,7 +95,7 @@ class TodoList extends Component {
 			locked: true
 		});
 
-		WeDeploy.data(DB).update(`${PATH}/${task.id}`, {
+		WeDeploy.data(this.db.url).update(`${this.db.path}/${task.id}`, {
 			description: eventTarget.value,
 			showEdit: false
 		}).then(response => {
@@ -127,7 +123,7 @@ class TodoList extends Component {
 			locked: true
 		});
 
-		WeDeploy.data(DB).update(`${PATH}/${task.id}`, {
+		WeDeploy.data(this.db.url).update(`${this.db.path}/${task.id}`, {
 			done: !task.done
 		}).then(response => {
 
@@ -159,7 +155,7 @@ class TodoList extends Component {
 			locked: true
 		});
 
-		WeDeploy.data(DB).delete(`${PATH}/${task.id}`)
+		WeDeploy.data(this.db.url).delete(`${this.db.path}/${task.id}`)
 			.then(response => {
 
 				this.tasks.splice(index, 1);
