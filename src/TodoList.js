@@ -3,6 +3,7 @@
 import templates from './TodoList.soy.js';
 import Component from 'metal-component';
 import Soy from 'metal-soy';
+import { Config } from 'metal-state';
 import WeDeploy from 'wedeploy';
 import './components/loading-bar/LoadingBar';
 import './components/toast/Toast';

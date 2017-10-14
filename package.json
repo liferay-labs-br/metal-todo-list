@@ -36,7 +36,9 @@
 	},
 	"dependencies": {
 		"font-awesome": "^4.7.0",
+		"metal-component": "^2.13.2",
 		"metal-soy": "^2.0.0",
+		"metal-state": "^2.13.2",
 		"wedeploy": "^3.5.0"
 	},
 	"devDependencies": {
