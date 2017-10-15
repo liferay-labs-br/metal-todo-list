@@ -32,7 +32,7 @@ class TodoList extends Component {
 	handleAddTask_(event) {
 		let eventTarget = event.delegateTarget;
 		let index = this.tasks.length;
-		let inputAdd = document.getElementById("inputAdd");
+		let inputAdd = document.querySelector('#inputAdd');
 
 		this.setState({
 			locked: true
@@ -61,7 +61,7 @@ class TodoList extends Component {
 			this.setFocus(inputAdd);
 
 		}).catch(error => {
-			console.log(error);
+			console.error(error);
 		});
 	}
 
@@ -206,7 +206,6 @@ class TodoList extends Component {
 }
 
 TodoList.STATE = {
-
 	/**
 	 * The path of tasks on Database
 	 * @instance
@@ -218,14 +217,8 @@ TodoList.STATE = {
 		url: Config.string().required(),
 	}).required(),
 
-	tasks: {
-		value: []
-	},
 	locked: {
 		value: true
-	},
-	messages: {
-		value: []
 	},
 	language: {
 		value: {
@@ -237,6 +230,12 @@ TodoList.STATE = {
 			addTask: 'Add a new task',
 			notFound: 'Nothing here :/'
 		}
+	},
+	messages: {
+		value: []
+	},
+	tasks: {
+		value: []
 	}
 }
 
