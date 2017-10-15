@@ -14,9 +14,12 @@
 		//Toast
 		<div class="todo-list__toast">
 			{foreach $message in $messages}
-				{call Toast.render}
-					{param message: $message /}
-				{/call}
+				<div class="todo-list__toast-item {$message.hide ? 'todo-list__toast-item--hide' : ''}">
+					{call Toast.render}
+						{param icon: $message.icon /}
+						{param text: $message.text /}
+					{/call}
+				</div>
 			{/foreach}
 		</div>
 

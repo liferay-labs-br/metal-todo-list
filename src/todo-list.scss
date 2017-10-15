@@ -2,6 +2,9 @@
 
 $c: '.todo-list';
 
+$color-shadow-1: rgba(14, 20, 26, .1);
+$color-shadow-2: rgba(14, 20, 26, .4);
+
 $todo-list-margin: #{$baseline * 4} auto;
 $todo-list-max-w: 700px;
 $todo-list-h: calc(100vh - #{$baseline * 8});
@@ -9,11 +12,22 @@ $todo-list-header-h: 100px;
 $todo-list-footer-h: 100px;
 $todo-list-body-h: calc(100% - #{$todo-list-header-h + $todo-list-footer-h});
 $todo-list-radius: 6px;
-$color-shadow-1: rgba(14, 20, 26, .1);
-$color-shadow-2: rgba(14, 20, 26, .4);
+
+$todo-list-toast-h: 50px;
+$todo-list-toast-margin: 0 0 .5rem;
 
 @mixin shadow($color) {
 	box-shadow: 12px 18px 48px 0 $color;
+}
+
+@mixin fade($opacity, $translate, $visibility) {
+	opacity: $opacity;
+	transform: translateY($translate);
+	visibility: $translate;
+}
+
+@mixin animation($animation) {
+	animation: $animation .5s ease-in-out forwards;
 }
 
 #{$c} {
@@ -110,6 +124,17 @@ $color-shadow-2: rgba(14, 20, 26, .4);
 		position: fixed;
 		right: $baseline;
 		top: $baseline;
+
+		#{$c}__toast-item {
+			@include fade(0, 100%, hidden);
+			@include animation(fadeInUp);
+			height: $todo-list-toast-h;
+			margin: $todo-list-toast-margin;
+
+			&#{$c}__toast-item--hide {
+				@include animation(fadeOutUp);
+			}
+		}
 	}
 
 	#{$c}__header,
@@ -141,103 +166,14 @@ $color-shadow-2: rgba(14, 20, 26, .4);
 			border-radius: $todo-list-radius;
 		}
 	}
-// 	@extend %item-w-100;
-// 	background-color: $color-white;
-// 	border: 1px solid $color-black;
-// 	box-shadow: 5px 5px $color-black;
-// 	display: flex;
-// 	flex-direction: column;
-// 	height: $todo-list-h;
-// 	justify-content: space-between;
-// 	margin: $todo-list-margin;
-// 	max-width: $todo-list-max-w;
+}
 
-// 	#{$c}__add-task {
-// 		position: relative;
+@keyframes fadeInUp {
+	to { @include fade(1, 0, visible); }
+}
 
-// 		input {
-// 			border: none;
-// 			padding: $baseline $baseline $baseline #{23px + $baseline};
-// 			width: 100%;
-// 		}
-// 	}
-
-// 	#{$c}__btn--remove-task {
-//     background-color: transparent;
-//     border: none;
-// 		margin-left: $baseline;
-//     padding: 0;
-// 	}
-
-// 	#{$c}__checkbox {
-// 		margin: #{5px + $baseline} 0 auto;
-// 	}
-
-// 	#{$c}__content-item {
-// 		@extend %item-w-100;
-// 	}
-
-// 	#{$c}__description {
-// 		@extend %description-pack;
-//     background-color: transparent;
-// 		background-image: none;
-// 		border: none;
-//     text-align: left;
-// 	}
-
-// 	#{$c}__description--edit-mode {
-// 		@extend %description-pack;
-// 		border: none;
-// 	}
-
-// 	#{$c}__icon-add-task {
-//     bottom: 0;
-//     height: 13px;
-//     left: 12px;
-//     margin: auto;
-// 		position: absolute;
-//     top: 0;
-// 	}
-
-// 	#{$c}__list-group {
-// 		margin: 0;
-// 		padding: 0;
-// 	}
-
-// 	#{$c}__list-group__item {
-// 		@extend %flex-center-between;
-// 		border-bottom: 1px solid $color-black;
-// 		max-height: 300px;
-// 		overflow: auto;
-// 		padding: 0 $baseline;
-// 		list-style: none;
-
-// 		&:hover:not(.todo-list__list-group__item--editing) {
-// 			background-color: $color-body;
-// 		}
-
-// 		&.removing {
-// 			overflow: hidden;
-// 			max-height: 0;
-// 			transition: max-height .5s ease-in-out;
-// 		}
-// 	}
-
-// 	#{$c}__list-group__item--done {
-// 		opacity: .4;
-
-// 		#{$c}__description {
-// 			text-decoration: line-through;
-// 		}
-// 	}
-
-// 	#{$c}__list-group__item--editing {
-// 		background-color: $color-yellow;
-// 	}
-
-// 	#{$c}__toast {
-// 		position: fixed;
-// 		right: $baseline * 3;
-// 		top: $baseline * 3;
-// 	}
+@keyframes fadeOutUp {
+	0% { @include fade(1, 0, visible);	}
+	50%, 100% { @include fade(0, -100%, hidden); margin: 0; }
+	100% { height: 0; }
 }

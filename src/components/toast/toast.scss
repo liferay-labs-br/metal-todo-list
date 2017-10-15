@@ -1,53 +1,24 @@
 $c: '.toast';
-$toast-animation-duration: .5s;
 $toast-bg: #323232;
 $toast-border-radius: 4px;
 $toast-color: #fff;
 $toast-max-w: 100%;
-$toast-margin: 0 0 .5rem;
 $toast-padding: 0 2rem;
 $toast-w: 300px;
 $toast-h: 50px;
 
-@mixin fade($opacity, $translate, $visibility) {
-	opacity: $opacity;
-	transform: translateY($translate);
-	visibility: $translate;
-}
-
-@mixin animation($animation) {
-	animation: $animation $toast-animation-duration ease-in-out forwards;
-}
-
 #{$c} {
-	@include fade(0, 100%, hidden);
-	@include animation(fadeInUp);
 	align-items: center;
 	background-color: $toast-bg;
 	border-radius: $toast-border-radius;
 	color: $toast-color;
 	display: flex;
 	height: $toast-h;
-	margin: $toast-margin;
 	max-width: $toast-max-w;
 	padding: $toast-padding;
 	width: $toast-w;
 
-	&#{$c}--hide {
-		@include animation(fadeOutUp);
-	}
-
 	#{$c}__icon {
 		margin-right: 1rem;
 	}
-}
-
-@keyframes fadeInUp {
-	to { @include fade(1, 0, visible); }
-}
-
-@keyframes fadeOutUp {
-	0% { @include fade(1, 0, visible);	}
-	50%, 100% { @include fade(0, -100%, hidden); margin: 0; }
-	100% { height: 0; }
 }

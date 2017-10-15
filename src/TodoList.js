@@ -192,27 +192,14 @@ class TodoList extends Component {
 
 	//set message
 	toast(text, icon) {
-		let messages_ = {
-			icon: icon || 'check',
-			hide: false,
-			text
-		}
+		let message = { icon, text, hide: false };
 
-		this.messages.push(messages_);
-		this.setState({
-			messages: this.messages
-		});
-
-		console.log(this.messages);
+		this.messages.push(message);
+		this.setState({ messages: this.messages });
 
 		setTimeout(() => {
-
-			messages_.hide = true;
-			this.setState({
-				messages: this.messages
-			});
-
-			console.log(this.messages);
+			message.hide = true;
+			this.setState({	messages: this.messages });
 		}, 5000);
 	}
 
