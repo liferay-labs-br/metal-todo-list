@@ -1,16 +1,12 @@
 @import url('https://fonts.googleapis.com/css?family=Merriweather');
+@import "colors";
 
 $baseline: 12px;
-
-$color-body: #f0f0f0;
-$color-black: #e3e3e3;
-$color-yellow: #fffda6;
-$color-white: #fff;
 
 $font-family: 'Merriweather', serif;
 $font-size: 16px;
 
-$background: "https://pre00.deviantart.net/b210/th/pre/f/2014/159/a/5/mac_wallpaper___flat_colors___1920x1200_by_dakirby309-d7lmemf.jpg";
+$background: url('/src/img/cats.jpg');
 
 * {
 	box-sizing: border-box;
@@ -19,8 +15,20 @@ $background: "https://pre00.deviantart.net/b210/th/pre/f/2014/159/a/5/mac_wallpa
 body {
 	background-color: $color-body;
 	margin: 0;
-	background: url($background);
-	background-size: cover;
+
+	&:after {
+		content: "";
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		left: 0;
+		top: 0;
+		z-index: -1;
+		opacity: .2;
+		background-blend-mode: hard-light;
+		background-image: $background;
+		animation: bgColors 2s linear infinite;
+	}
 }
 
 body, input, button {
@@ -35,4 +43,11 @@ h1, h2, h3, h4, h5, h6 {
 
 .hide {
 	display: none !important;
+}
+
+@keyframes bgColors {
+	0%, 100% { background-color: $color1; }
+	25% { background-color: $color2; }
+	50% { background-color: $color3; }
+	75% { background-color: $color4; }
 }
